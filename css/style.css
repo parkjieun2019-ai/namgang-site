@@ -672,6 +672,21 @@ select.input {
   .wz-summary dl { grid-template-columns: 72px minmax(0, 1fr); }
 }
 
+/* ---------- 준비 중 페이지 ---------- */
+.sub-visual.is-soon { min-height: 100vh; min-height: 100svh; align-items: center; }
+.sub-visual.is-soon .container { padding-bottom: 80px; }
+.soon-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-top: 22px; padding: 8px 16px;
+  border: 1px solid rgba(255,255,255,.35); border-radius: 40px;
+  font-size: 14px; font-weight: 600;
+}
+.soon-badge::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: pulse 1.6s ease-in-out infinite; }
+.soon-actions { margin-top: 36px; display: flex; flex-wrap: wrap; gap: 12px; }
+@media (max-width: 560px) {
+  .soon-actions .btn { flex: 1 1 100%; }
+}
+
 /* ---------- 반응형 ---------- */
 @media (max-width: 1100px) {
   .gnb, .header-tel { display: none; }
