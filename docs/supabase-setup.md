@@ -45,7 +45,7 @@ Supabase는 견적 문의와 첨부 사진, 사이트 사진을 저장하는 무
    ```
    명단에 없는 계정은 로그인해도 아무것도 볼 수 없습니다. (회원가입이 실수로 켜져도 손님 정보가 안전한 이유)
 4. 이 이메일·비밀번호로 관리자 페이지에 로그인합니다. (비밀번호는 Claude에게 보내지 마세요)
-5. 담당자가 바뀌면: Users에서 계정 삭제 + `delete from public.admin_users where email = '...';`
+5. 첫 관리자 이후의 담당자 추가·삭제·비밀번호 재설정은 **관리자 페이지 → 담당자** 메뉴에서 합니다. (Supabase Edge Function `admin-users`, 코드: `supabase/functions/admin-users/index.ts`)
 
 ## 5. 홈페이지에 연결하기
 

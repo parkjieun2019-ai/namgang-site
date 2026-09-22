@@ -227,6 +227,37 @@ em { font-style: normal; color: var(--accent); }
 .settings-grid .wide { grid-column: 1 / -1; }
 .settings-foot { display: flex; justify-content: flex-end; padding: 14px 28px; border-top: 1px solid var(--line); background: var(--sunken); border-radius: 0 0 var(--radius) var(--radius); }
 
+/* ---------- 담당자 ---------- */
+.team-layout { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+.card-head { display: flex; align-items: baseline; gap: 8px; padding: 18px 22px; border-bottom: 1px solid var(--line); }
+.card-head h2, .team-form h2 { margin: 0; font-size: 16px; letter-spacing: -0.02em; }
+.card-count { font-size: 13px; font-weight: 600; color: var(--faint); font-variant-numeric: tabular-nums; }
+.team-list { list-style: none; margin: 0; padding: 0; }
+.member { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 16px 22px; border-top: 1px solid var(--line); }
+.member:first-child { border-top: 0; }
+.avatar { flex: none; width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: var(--side); color: var(--accent); font-family: var(--en); font-weight: 700; font-size: 15px; }
+.member-info { flex: 1; min-width: 180px; display: grid; gap: 1px; }
+.member-info strong { font-size: 14.5px; overflow-wrap: anywhere; }
+.member-info > span { font-size: 12.5px; color: var(--faint); }
+.member-info .warn { color: var(--danger); font-weight: 600; }
+.me-tag { margin-left: 8px; padding: 1px 8px; border-radius: 10px; background: var(--accent-soft); color: var(--accent-ink); font-size: 11.5px; font-weight: 700; vertical-align: 1px; }
+.member-actions { display: flex; gap: 6px; }
+.member-actions .btn { height: 34px; padding: 0 12px; font-size: 13px; }
+.team-side { display: grid; gap: 20px; }
+.team-form { display: grid; gap: 14px; padding: 22px; }
+.form-desc { margin: -6px 0 0; font-size: 13.5px; color: var(--muted); }
+.team-form > .btn { justify-self: start; }
+.pw-row { display: flex; gap: 8px; }
+.pw-row input { flex: 1; min-width: 0; font-family: Consolas, 'Courier New', monospace; letter-spacing: .04em; }
+.pw-row .btn { height: auto; }
+
+.mini-dialog { width: min(440px, calc(100vw - 24px)); padding: 0; border: 0; border-radius: 16px; background: var(--surface); color: var(--ink); box-shadow: 0 24px 64px rgba(0,0,0,.3); }
+.mini-dialog::backdrop { background: rgba(20, 19, 17, .6); backdrop-filter: blur(2px); }
+.mini-dialog form { display: grid; gap: 14px; padding: 24px; }
+.mini-dialog h2 { margin: 0; font-size: 18px; letter-spacing: -0.02em; }
+.mini-dialog .form-desc { margin: -4px 0 0; overflow-wrap: anywhere; }
+.mini-foot { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
+
 /* ---------- 사진 편집 창 ---------- */
 .editor { width: min(1040px, calc(100vw - 24px)); max-height: calc(100vh - 24px); padding: 0; border: 0; border-radius: 16px; background: var(--surface); color: var(--ink); box-shadow: 0 24px 64px rgba(0,0,0,.3); }
 .editor::backdrop { background: rgba(20, 19, 17, .6); backdrop-filter: blur(2px); }
@@ -269,6 +300,7 @@ em { font-style: normal; color: var(--accent); }
   .d-cols { grid-template-columns: 1fr; }
   .d-cols .d-sec + .d-sec { border-top: 1px solid var(--line); margin-top: 20px; }
   .d-work { grid-template-columns: 1fr; gap: 20px; }
+  .team-layout { grid-template-columns: 1fr; }
 }
 @media (max-width: 860px) {
   .login { grid-template-columns: 1fr; }

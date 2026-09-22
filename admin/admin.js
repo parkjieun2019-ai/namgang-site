@@ -585,6 +585,136 @@
       .catch(function (err) { fail(err, '저장하지 못했어요.'); });
   });
 
+  /* ---------- 담당자 ---------- */
+  // 계정 생성·삭제는 Supabase Edge Function "admin-users"가 처리 (최고 권한 키는 Supabase 안에만 있음)
+  var team = { loaded: false, me: '', admins: [] };
+  var demoTeam = [
+    { email: 'may212@daum.net', added_at: '2026-09-22T10:50:00Z', has_account: true, last_sign_in_at: '2026-09-22T11:20:00Z' },
+    { email: 'staff@example.com', added_at: '2026-09-22T12:00:00Z', has_account: true, last_sign_in_at: null }
+  ];
+
+  function callTeam(payload) {
+    if (DEMO) return Promise.reject(new Error('데모 모드에서는 담당자를 바꿀 수 없어요.'));
+    return sb.functions.invoke('admin-users', { body: payload }).then(function (res) {
+      if (!res.error) return res.data;
+      var ctx = res.error.context;
+      return (ctx && typeof ctx.json === 'function' ? ctx.json() : Promise.resolve({})).catch(function () { return {}; }).then(function (body) {
+        var e = new Error((body && body.error) || '담당자 기능에 연결하지 못했어요. 잠시 후 다시 시도해 주세요.');
+        e.friendly = true;
+        throw e;
+      });
+    });
+  }
+  function teamFail(err, el) {
+    console.warn(err);
+    var msg = err && (err.friendly || DEMO) ? err.message : '처리하지 못했어요. 잠시 후 다시 시도해 주세요.';
+    if (el) el.textContent = msg; else toast(msg, true);
+  }
+
+  function loadTeam() {
+    if (DEMO) { team = { loaded: true, me: 'may212@daum.net', admins: demoTeam }; renderTeam(); return; }
+    callTeam({ action: 'list' }).then(function (d) {
+      team = { loaded: true, me: d.me, admins: d.admins || [] };
+      renderTeam();
+    }).catch(function (err) {
+      $('#teamList').innerHTML = '<li class="empty">' + esc(err.friendly ? err.message : '목록을 불러오지 못했어요.') + '</li>';
+    });
+  }
+  function renderTeam() {
+    $('#teamCount').textContent = team.admins.length + '명';
+    $('#teamList').innerHTML = team.admins.map(function (a) {
+      var isMe = a.email === team.me;
+      var initial = esc(a.email.charAt(0).toUpperCase());
+      var seen = !a.has_account ? '<span class="warn">로그인 계정 없음</span>'
+        : a.last_sign_in_at ? '최근 로그인 ' + esc(fmtDate(a.last_sign_in_at)) : '아직 로그인 전';
+      return '<li class="member"><span class="avatar">' + initial + '</span>' +
+        '<div class="member-info"><strong>' + esc(a.email) + (isMe ? '<span class="me-tag">나</span>' : '') + '</strong><span>' + seen + '</span></div>' +
+        (isMe ? '' : '<div class="member-actions"><button type="button" class="btn" data-reset="' + esc(a.email) + '">비밀번호 재설정</button>' +
+          '<button type="button" class="btn danger" data-remove="' + esc(a.email) + '">삭제</button></div>') + '</li>';
+    }).join('') || '<li class="empty">등록된 관리자가 없어요.</li>';
+  }
+
+  function genPassword() {
+    var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
+    var buf = new Uint32Array(10);
+    crypto.getRandomValues(buf);
+    return Array.prototype.map.call(buf, function (n) { return chars[n % chars.length]; }).join('');
+  }
+  $$('[data-gen]').forEach(function (b) {
+    b.addEventListener('click', function () { var input = $('#' + b.dataset.gen); input.value = genPassword(); input.focus(); input.select(); });
+  });
+
+  $$('.tab').forEach(function (tab) {
+    if (tab.dataset.tab === 'team') tab.addEventListener('click', function () { if (!team.loaded) loadTeam(); });
+  });
+
+  $('#teamAddForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var email = $('#teamEmail').value.trim().toLowerCase(), pw = $('#teamPw').value, errEl = $('#teamErr');
+    errEl.textContent = '';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { errEl.textContent = '이메일 주소를 확인해 주세요.'; return; }
+    if (pw.length < 8) { errEl.textContent = '임시 비밀번호는 8자 이상으로 정해 주세요.'; return; }
+    var btn = $('#teamAddBtn');
+    btn.disabled = true; btn.textContent = '추가 중…';
+    callTeam({ action: 'add', email: email, password: pw }).then(function (d) {
+      $('#teamEmail').value = ''; $('#teamPw').value = '';
+      toast(email + ' 담당자를 추가했어요.' + (d.note ? ' ' + d.note : ''));
+      loadTeam();
+    }).catch(function (err) { teamFail(err, errEl); })
+      .then(function () { btn.disabled = false; btn.textContent = '담당자 추가'; });
+  });
+
+  var pwDlg = $('#pwDialog'), pwTarget = '';
+  $('#teamList').addEventListener('click', function (e) {
+    var b = e.target.closest('button');
+    if (!b) return;
+    if (b.dataset.reset) {
+      pwTarget = b.dataset.reset;
+      $('#pwDialogDesc').textContent = pwTarget + ' 계정의 비밀번호를 새 임시 비밀번호로 바꿔요. 바꾼 뒤 담당자에게 알려주세요.';
+      $('#pwDialogInput').value = genPassword();
+      $('#pwDialogErr').textContent = '';
+      pwDlg.showModal();
+    }
+    if (b.dataset.remove) {
+      var email = b.dataset.remove;
+      if (!confirm(email + ' 담당자를 삭제할까요?\n로그인 계정도 함께 삭제되어 더 이상 관리자 페이지에 들어올 수 없어요.')) return;
+      b.disabled = true;
+      callTeam({ action: 'remove', email: email }).then(function () { toast(email + ' 담당자를 삭제했어요.'); loadTeam(); })
+        .catch(function (err) { b.disabled = false; teamFail(err); });
+    }
+  });
+  $('#pwDialogCancel').addEventListener('click', function () { pwDlg.close(); });
+  $('#pwDialogForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var pw = $('#pwDialogInput').value, errEl = $('#pwDialogErr'), btn = $('#pwDialogOk');
+    if (pw.length < 8) { errEl.textContent = '8자 이상으로 정해 주세요.'; return; }
+    btn.disabled = true;
+    callTeam({ action: 'reset', email: pwTarget, password: pw }).then(function () {
+      pwDlg.close();
+      toast(pwTarget + ' 비밀번호를 바꿨어요. 담당자에게 새 임시 비밀번호를 알려주세요.');
+    }).catch(function (err) { teamFail(err, errEl); })
+      .then(function () { btn.disabled = false; });
+  });
+
+  $('#myPwForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var pw = $('#myPw').value, pw2 = $('#myPw2').value, errEl = $('#myPwErr'), btn = $('#myPwBtn');
+    errEl.textContent = '';
+    if (pw.length < 8) { errEl.textContent = '8자 이상으로 정해 주세요.'; return; }
+    if (pw !== pw2) { errEl.textContent = '두 비밀번호가 서로 달라요.'; return; }
+    if (DEMO) { errEl.textContent = '데모 모드에서는 비밀번호를 바꿀 수 없어요.'; return; }
+    btn.disabled = true;
+    sb.auth.updateUser({ password: pw }).then(function (res) {
+      if (res.error) throw res.error;
+      $('#myPw').value = ''; $('#myPw2').value = '';
+      toast('비밀번호를 바꿨어요. 다음 로그인부터 새 비밀번호를 쓰세요.');
+    }).catch(function (err) {
+      console.warn(err);
+      errEl.textContent = /different|same/i.test(err.message || '') ? '지금 쓰는 비밀번호와 다른 비밀번호로 정해 주세요.'
+        : /weak|short/i.test(err.message || '') ? '더 긴 비밀번호로 정해 주세요.' : '바꾸지 못했어요. 잠시 후 다시 시도해 주세요.';
+    }).then(function () { btn.disabled = false; });
+  });
+
   /* ---------- 시작 ---------- */
   if (DEMO) { loadDemo(); showShell(); return; }
   loadSupabase().then(function () { return sb.auth.getSession(); }).then(function (res) {
