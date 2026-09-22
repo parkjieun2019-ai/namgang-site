@@ -12,6 +12,7 @@ window.SITE_CONFIG = {
   kakaoChannelUrl: 'https://pf.kakao.com/_xhxjfaX/chat',
 
   // Supabase 연결 정보 (관리자설정가이드.md 참고). 비어 있으면 기본 내용만 표시
-  supabaseUrl: '',
-  supabaseAnonKey: ''
+  // (공개용 anon 키 — 홈페이지에 공개되어도 안전. 권한은 Supabase 보안 규칙이 지킴)
+  supabaseUrl: 'https://ieowqffzcrggkntmfeik.supabase.co',
+  supabaseAnonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imllb3dxZmZ6Y3JnZ2tudG1mZWlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAwNjI2MzcsImV4cCI6MjEwNTYzODYzN30.SaK02GX4u2OKF09LvTRDzIqsT9Jj7PglWcW8VD9QDXw'
 };
