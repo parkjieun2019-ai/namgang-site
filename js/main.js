@@ -11,13 +11,16 @@
     var telHref = 'tel:' + String(config.phone || '').replace(/[^0-9+]/g, '');
     document.querySelectorAll('[data-tel-link]').forEach(function (el) { el.setAttribute('href', telHref); });
     document.querySelectorAll('[data-tel-text]').forEach(function (el) { el.textContent = config.phone; });
+    // 카카오톡 채널 주소가 없으면 카톡 버튼을 숨긴다 (눌러도 반응 없는 버튼 방지)
+    var hasKakao = /^https?:\/\//.test(config.kakaoChannelUrl || '');
     document.querySelectorAll('[data-kakao-link]').forEach(function (el) {
-      el.setAttribute('href', config.kakaoChannelUrl || '#');
-      if (config.kakaoChannelUrl && config.kakaoChannelUrl !== '#') {
-        el.setAttribute('target', '_blank');
-        el.setAttribute('rel', 'noopener');
-      }
+      el.hidden = !hasKakao;
+      if (!hasKakao) return;
+      el.setAttribute('href', config.kakaoChannelUrl);
+      el.setAttribute('target', '_blank');
+      el.setAttribute('rel', 'noopener');
     });
+    document.documentElement.classList.toggle('no-kakao', !hasKakao);
     document.querySelectorAll('[data-email-text]').forEach(function (el) { el.textContent = config.email; });
     document.querySelectorAll('[data-mail-link]').forEach(function (el) { el.setAttribute('href', 'mailto:' + config.email); });
     document.querySelectorAll('[data-fax-text]').forEach(function (el) { el.textContent = config.fax; });
