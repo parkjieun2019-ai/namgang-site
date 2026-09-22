@@ -70,7 +70,7 @@ Deno.serve(async (req) => {
     const detail = await res.text();
     console.error('Resend 실패', res.status, detail);
     await db.from('quotes').update({ notified_at: null }).eq('id', id); // 다음 시도에서 다시 보낼 수 있게
-    return json(502, { error: 'mail failed', status: res.status });
+    return json(502, { error: 'mail failed', status: res.status, detail: detail.slice(0, 300) });
   }
   return json(200, { ok: true, to: to.length });
 });
