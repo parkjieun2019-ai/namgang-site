@@ -31,7 +31,8 @@ Deno.serve(async (req) => {
   if (error) { console.error(error); return json(500, { error: 'db' }); }
   if (!q) return json(200, { skipped: 'already notified or too old' });
 
-  const key = Deno.env.get('RESEND_API_KEY');
+  // 비밀값 이름: RESEND_API_KEY (처음 등록 때 NAMGANG-SITE 이름으로 저장돼 둘 다 읽음)
+  const key = Deno.env.get('RESEND_API_KEY') || Deno.env.get('NAMGANG-SITE');
   if (!key) { console.warn('RESEND_API_KEY 없음 — 알림 생략'); return json(200, { skipped: 'no api key' }); }
 
   const { data: rows } = await db.from('admin_users').select('email').eq('notify', true);
