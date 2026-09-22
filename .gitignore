@@ -5,3 +5,7 @@ desktop.ini
 
 # 로그
 *.log
+
+# CI 로고 묶음 (배포 대상 아님)
+CI_남강포장/
+남강포장_CI.zip
