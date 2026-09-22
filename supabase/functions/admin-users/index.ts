@@ -32,6 +32,7 @@ Deno.serve(async (req) => {
   const { data: isAdmin } = await asCaller.rpc('is_admin');
   if (!me?.user || isAdmin !== true) return reply(403, { error: '관리자만 사용할 수 있어요.' });
   const myEmail = (me.user.email ?? '').toLowerCase();
+  const OWNER_ONLY = '최고 관리자만 할 수 있어요.';
 
   const db = createClient(url, service, { auth: { persistSession: false } });
   let body: Record<string, string> = {};
@@ -51,19 +52,24 @@ Deno.serve(async (req) => {
     return null;
   }
   const validEmail = (e: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+  async function roleOf(target: string) {
+    const { data } = await db.from('admin_users').select('role').eq('email', target).maybeSingle();
+    return data?.role ?? null;
+  }
 
   try {
     if (action === 'list') {
-      const { data: rows, error } = await db.from('admin_users').select('email, created_at').order('created_at');
+      const { data: rows, error } = await db.from('admin_users').select('email, role, created_at').order('created_at');
       if (error) throw error;
       const { data: users, error: uErr } = await db.auth.admin.listUsers({ page: 1, perPage: 1000 });
       if (uErr) throw uErr;
       const byEmail = new Map(users.users.map((u) => [(u.email ?? '').toLowerCase(), u]));
       return reply(200, {
         me: myEmail,
+        my_role: (rows ?? []).find((r) => r.email.toLowerCase() === myEmail)?.role ?? 'staff',
         admins: (rows ?? []).map((r) => {
           const u = byEmail.get(r.email.toLowerCase());
-          return { email: r.email, added_at: r.created_at, has_account: !!u, last_sign_in_at: u?.last_sign_in_at ?? null };
+          return { email: r.email, role: r.role, added_at: r.created_at, has_account: !!u, last_sign_in_at: u?.last_sign_in_at ?? null };
         }),
       });
     }
@@ -79,15 +85,17 @@ Deno.serve(async (req) => {
         const { error } = await db.auth.admin.createUser({ email, password, email_confirm: true });
         if (error) throw error;
       }
-      const { error: insErr } = await db.from('admin_users').upsert({ email }, { onConflict: 'email' });
+      const { error: insErr } = await db.from('admin_users').upsert({ email, role: 'staff' }, { onConflict: 'email', ignoreDuplicates: true });
       if (insErr) throw insErr;
       return reply(200, { ok: true, created: !existing, note });
     }
 
     if (action === 'reset') {
+      if ((await roleOf(myEmail)) !== 'owner') return reply(403, { error: OWNER_ONLY });
       if (password.length < MIN_PW) return reply(400, { error: '임시 비밀번호는 ' + MIN_PW + '자 이상으로 정해 주세요.' });
-      const { data: listed } = await db.from('admin_users').select('email').eq('email', email).maybeSingle();
-      if (!listed) return reply(400, { error: '관리자 명단에 없는 이메일이에요.' });
+      const targetRole = await roleOf(email);
+      if (!targetRole) return reply(400, { error: '관리자 명단에 없는 이메일이에요.' });
+      if (targetRole === 'owner') return reply(400, { error: '최고 관리자 비밀번호는 본인이 [내 비밀번호 변경]에서 바꿔 주세요.' });
       const user = await findUser(email);
       if (!user) {
         const { error } = await db.auth.admin.createUser({ email, password, email_confirm: true });
@@ -100,9 +108,11 @@ Deno.serve(async (req) => {
     }
 
     if (action === 'remove') {
+      if ((await roleOf(myEmail)) !== 'owner') return reply(403, { error: OWNER_ONLY });
       if (email === myEmail) return reply(400, { error: '본인 계정은 삭제할 수 없어요.' });
-      const { count } = await db.from('admin_users').select('email', { count: 'exact', head: true });
-      if ((count ?? 0) <= 1) return reply(400, { error: '마지막 관리자는 삭제할 수 없어요.' });
+      const targetRole = await roleOf(email);
+      if (!targetRole) return reply(400, { error: '관리자 명단에 없는 이메일이에요.' });
+      if (targetRole === 'owner') return reply(400, { error: '최고 관리자는 삭제할 수 없어요.' });
       const { error } = await db.from('admin_users').delete().eq('email', email);
       if (error) throw error;
       const user = await findUser(email);
