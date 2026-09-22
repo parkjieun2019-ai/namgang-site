@@ -915,6 +915,29 @@ h1, h2, h3, h4 { line-height: 1.35; letter-spacing: -0.02em; }
 .eyebrow-sm, .wz-label em, .faq-list summary .q, .loc-info dt, .spec-table .em,
 .timeline ul b, .flow li::before, .job-card .tag, .tags span, .work-card .tag { color: var(--accent-text); }
 
+/* 히어로 슬로건: Protecting Products. Building Trust. */
+.hero-title { font-size: clamp(40px, 6.6vw, 96px); line-height: 1.02; }
+.hero-slogan-ko { margin-top: 22px; font-size: clamp(20px, 2.1vw, 28px); font-weight: 600; letter-spacing: -0.02em; color: #fff; }
+.hero-slogan-ko + .hero-sub { margin-top: 10px; font-size: clamp(15px, 1.25vw, 18px); font-weight: 400; color: rgba(255,255,255,.75); }
+.hero-content { padding-bottom: 88px; } /* 하단 공정 단계 표시만큼 비워서 가운데 정렬 */
+@media (max-width: 560px) {
+  .hero-title { font-size: 34px; }
+  .hero-slogan-ko { margin-top: 14px; font-size: 19px; }
+  .hero-actions { margin-top: 26px; }
+  .hero-actions .btn { height: 48px; }
+}
+@media (max-width: 560px) and (max-height: 700px) {
+  .hero-sub { display: none; }
+  .hero-eyebrow { margin-bottom: 12px; }
+}
+
+/* 대표 인사말 서명 */
+.sign { margin-top: 40px; }
+.sign-company { font-size: 15px; color: var(--muted); }
+.sign-name { margin-top: 2px; display: flex; align-items: center; flex-wrap: wrap; gap: 10px; font-size: 16px; color: var(--muted); }
+.sign-name strong { margin-left: 0; font-size: 22px; color: var(--ink); }
+.signature { height: 54px; width: auto; margin-left: 6px; }
+
 /* 로고: 남강포장 박스 심볼 (선은 글자색을 따라가고 테이프는 옐로) */
 .logo-mark { width: 42px; height: 42px; background: none; border-radius: 0; color: inherit; }
 .logo-mark svg { width: 42px; height: 42px; }
