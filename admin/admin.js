@@ -590,8 +590,8 @@
   // 최고 관리자(owner)만 삭제·비밀번호 재설정 가능. 최고 관리자는 화면에서 삭제 불가 (Edge Function에서도 막음)
   var team = { loaded: false, me: '', myRole: 'staff', admins: [] };
   var demoTeam = [
-    { email: 'may212@daum.net', role: 'owner', added_at: '2026-09-22T10:50:00Z', has_account: true, last_sign_in_at: '2026-09-22T11:20:00Z' },
-    { email: 'staff@example.com', role: 'staff', added_at: '2026-09-22T12:00:00Z', has_account: true, last_sign_in_at: null }
+    { email: 'may212@daum.net', role: 'owner', notify: true, added_at: '2026-09-22T10:50:00Z', has_account: true, last_sign_in_at: '2026-09-22T11:20:00Z' },
+    { email: 'staff@example.com', role: 'staff', notify: false, added_at: '2026-09-22T12:00:00Z', has_account: true, last_sign_in_at: null }
   ];
 
   function callTeam(payload) {
@@ -631,9 +631,11 @@
       var seen = !a.has_account ? '<span class="warn">로그인 계정 없음</span>'
         : a.last_sign_in_at ? '최근 로그인 ' + esc(fmtDate(a.last_sign_in_at)) : '아직 로그인 전';
       var canManage = iAmOwner && !isMe && !isOwner;
+      var canNotify = isMe || iAmOwner;
       return '<li class="member"><span class="avatar' + (isOwner ? ' owner' : '') + '">' + initial + '</span>' +
         '<div class="member-info"><strong>' + esc(a.email) + (isMe ? '<span class="me-tag">나</span>' : '') + '</strong>' +
         '<span><b class="role ' + (isOwner ? 'owner' : 'staff') + '">' + (isOwner ? '최고 관리자' : '담당자') + '</b> · ' + seen + '</span></div>' +
+        '<label class="notify-toggle" title="' + (canNotify ? '' : '본인 또는 최고 관리자만 바꿀 수 있어요') + '"><input type="checkbox" data-notify="' + esc(a.email) + '"' + (a.notify ? ' checked' : '') + (canNotify ? '' : ' disabled') + '><span>새 문의 메일</span></label>' +
         (canManage ? '<div class="member-actions"><button type="button" class="btn" data-reset="' + esc(a.email) + '">비밀번호 재설정</button>' +
           '<button type="button" class="btn danger" data-remove="' + esc(a.email) + '">삭제</button></div>' : '') + '</li>';
     }).join('') || '<li class="empty">등록된 관리자가 없어요.</li>';
@@ -667,6 +669,20 @@
       loadTeam();
     }).catch(function (err) { teamFail(err, errEl); })
       .then(function () { btn.disabled = false; btn.textContent = '담당자 추가'; });
+  });
+
+  $('#teamList').addEventListener('change', function (e) {
+    var cb = e.target.closest('[data-notify]');
+    if (!cb) return;
+    var email = cb.dataset.notify, on = cb.checked;
+    var member = team.admins.filter(function (a) { return a.email === email; })[0];
+    if (DEMO) { if (member) member.notify = on; toast('알림 설정을 바꿨어요. (데모: 저장 안 됨)'); return; }
+    cb.disabled = true;
+    callTeam({ action: 'notify', email: email, on: String(on) }).then(function () {
+      if (member) member.notify = on;
+      toast(email + (on ? ' — 새 문의가 오면 메일로 알려드려요.' : ' — 새 문의 메일을 받지 않아요.'));
+    }).catch(function (err) { cb.checked = !on; teamFail(err); })
+      .then(function () { cb.disabled = false; });
   });
 
   var pwDlg = $('#pwDialog'), pwTarget = '';
