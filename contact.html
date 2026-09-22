@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-  <link rel="stylesheet" href="css/style.css?v=2026092207">
+  <link rel="stylesheet" href="css/style.css?v=2026092208">
 </head>
 <body>
 
@@ -88,7 +88,6 @@
           </a>
           <a href="#" data-tel-link class="channel">
             <span class="channel-icon tel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg></span>
-            <!-- TODO: 실제 상담 시간 -->
             <span><small>견적 Hotline</small><strong data-tel-text>031-611-8366</strong><span>평일 09:00 – 18:00</span></span>
           </a>
           <a href="#" data-mail-link class="channel">
@@ -184,7 +183,7 @@
               <fieldset class="wz-group">
                 <legend class="wz-label">수량 <small>1회 주문 기준</small><em>*</em></legend>
                 <div class="chips">
-                  <label class="chip"><input type="radio" name="quantity" value="500개 미만"><span>500개 미만</span></label>
+                  <label class="chip"><input type="radio" name="quantity" value="100 ~ 500개"><span>100 ~ 500개</span></label>
                   <label class="chip"><input type="radio" name="quantity" value="500 ~ 1,000개"><span>500 ~ 1,000개</span></label>
                   <label class="chip"><input type="radio" name="quantity" value="1,000 ~ 5,000개"><span>1,000 ~ 5,000개</span></label>
                   <label class="chip"><input type="radio" name="quantity" value="5,000 ~ 10,000개"><span>5,000 ~ 10,000개</span></label>
@@ -314,8 +313,7 @@
             <div class="ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></div>
             <h2 tabindex="-1">견적 요청이 접수되었습니다</h2>
             <span class="receipt">접수번호 <span data-receipt></span></span>
-            <!-- TODO: 실제 회신 기준 시간 -->
-            <p>담당자가 내용을 확인한 뒤 <b data-reply-text>전화</b>로 연락드리겠습니다.<br>영업일 기준 ○시간 이내 회신을 원칙으로 합니다.</p>
+            <p>담당자가 내용을 확인한 뒤 <b data-reply-text>전화</b>로 연락드리겠습니다.<br>48시간 이내에 회신드립니다.</p>
             <div class="actions">
               <a href="#" data-kakao-link class="btn btn-kakao">카카오톡으로 추가 문의</a>
               <a href="index.html" class="btn btn-line">홈으로</a>
@@ -351,15 +349,15 @@
           <h2 class="en">Quote <b>FAQ</b></h2>
           <p>견적 요청 전에 많이 물어보시는 내용입니다</p>
         </div>
-        <!-- TODO: 실제 답변으로 교체 -->
+        <!-- TODO: 결제 방식 답변 확인 -->
         <div class="faq-list faq-center reveal">
           <details open>
             <summary><span><span class="q">Q</span>견적은 얼마나 빨리 받을 수 있나요?</span></summary>
-            <p class="answer">영업일 기준 ○시간 이내 회신을 원칙으로 합니다. 규격과 수량이 정해져 있으면 더 빠르게 안내해 드려요.</p>
+            <p class="answer">문의를 받은 뒤 48시간 이내에 회신드립니다. 규격과 수량이 정해져 있으면 더 빠르게 안내해 드려요.</p>
           </details>
           <details>
             <summary><span><span class="q">Q</span>최소 주문 수량이 있나요?</span></summary>
-            <p class="answer">박스 종류와 규격에 따라 다릅니다. 기본 최소 수량은 ○○○개이며, 소량이 필요하시면 상담해 주세요.</p>
+            <p class="answer">100개부터 제작할 수 있습니다. 박스 종류와 규격에 따라 달라질 수 있으니 편하게 상담해 주세요.</p>
           </details>
           <details>
             <summary><span><span class="q">Q</span>규격을 모르는데 견적을 받을 수 있나요?</span></summary>
@@ -367,7 +365,7 @@
           </details>
           <details>
             <summary><span><span class="q">Q</span>제작 기간은 얼마나 걸리나요?</span></summary>
-            <p class="answer">무인쇄 박스는 주문 확정 후 약 ○일, 인쇄 박스는 약 ○일이 소요됩니다. 급한 일정은 먼저 말씀해 주세요.</p>
+            <p class="answer">주문 확정 후 7일 이내에 제작합니다. 급한 일정은 먼저 말씀해 주세요.</p>
           </details>
           <details>
             <summary><span><span class="q">Q</span>샘플을 먼저 받아볼 수 있나요?</span></summary>
@@ -379,7 +377,7 @@
           </details>
           <details>
             <summary><span><span class="q">Q</span>납품 가능한 지역은 어디인가요?</span></summary>
-            <p class="answer">안성을 중심으로 ○○·○○ 지역에 직접 납품하며, 그 외 지역은 화물 배송으로 보내드립니다.</p>
+            <p class="answer">전국 어디든 납품합니다. 수량과 지역에 맞춰 배송 일정을 안내해 드립니다.</p>
           </details>
         </div>
       </div>
@@ -430,8 +428,8 @@
     <button type="button" class="float-top" aria-label="맨 위로">TOP</button>
   </div>
 
-  <script src="js/config.js?v=2026092207"></script>
-  <script src="js/main.js?v=2026092207"></script>
-  <script src="js/quote-form.js?v=2026092207"></script>
+  <script src="js/config.js?v=2026092208"></script>
+  <script src="js/main.js?v=2026092208"></script>
+  <script src="js/quote-form.js?v=2026092208"></script>
 </body>
 </html>
