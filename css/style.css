@@ -915,6 +915,14 @@ h1, h2, h3, h4 { line-height: 1.35; letter-spacing: -0.02em; }
 .eyebrow-sm, .wz-label em, .faq-list summary .q, .loc-info dt, .spec-table .em,
 .timeline ul b, .flow li::before, .job-card .tag, .tags span, .work-card .tag { color: var(--accent-text); }
 
+/* 로고: 남강포장 박스 심볼 (선은 글자색을 따라가고 테이프는 옐로) */
+.logo-mark { width: 42px; height: 42px; background: none; border-radius: 0; color: inherit; }
+.logo-mark svg { width: 42px; height: 42px; }
+.logo-mark .tape { stroke: var(--accent); }
+.logo-text strong em { font-style: normal; color: var(--accent); }
+.site-header.is-scrolled .logo-text strong em { color: #c78a12; }
+.logo-text small { font-family: var(--font-en); font-size: 12px; font-weight: 500; letter-spacing: .04em; opacity: .7; }
+
 @media (max-width: 560px) {
   .info-table dt { color: var(--accent-text); }
   .product-card p, .trio-card p, .type-card p, .info-card p, .job-card p,

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-label="남강포장 심볼">
+  <!-- 심볼만: 차콜 바탕 + 흰 박스 + 옐로 테이프 (프로필 사진·파비콘용) -->
+  <rect width="48" height="48" rx="10" fill="#1b1b1b"/>
+  <g fill="none" stroke-linejoin="round" stroke-linecap="round" transform="translate(4.8 4.8) scale(.8)">
+    <path d="M24 4 43 15v19L24 45 5 34V15zM5 15l19 11 19-11M24 26v19" stroke="#ffffff" stroke-width="2.6"/>
+    <path d="M14.5 9.5 33.5 20.5v4.5" stroke="#f2b233" stroke-width="4.4"/>
+  </g>
+</svg>
