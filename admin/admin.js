@@ -587,10 +587,11 @@
 
   /* ---------- 담당자 ---------- */
   // 계정 생성·삭제는 Supabase Edge Function "admin-users"가 처리 (최고 권한 키는 Supabase 안에만 있음)
-  var team = { loaded: false, me: '', admins: [] };
+  // 최고 관리자(owner)만 삭제·비밀번호 재설정 가능. 최고 관리자는 화면에서 삭제 불가 (Edge Function에서도 막음)
+  var team = { loaded: false, me: '', myRole: 'staff', admins: [] };
   var demoTeam = [
-    { email: 'may212@daum.net', added_at: '2026-09-22T10:50:00Z', has_account: true, last_sign_in_at: '2026-09-22T11:20:00Z' },
-    { email: 'staff@example.com', added_at: '2026-09-22T12:00:00Z', has_account: true, last_sign_in_at: null }
+    { email: 'may212@daum.net', role: 'owner', added_at: '2026-09-22T10:50:00Z', has_account: true, last_sign_in_at: '2026-09-22T11:20:00Z' },
+    { email: 'staff@example.com', role: 'staff', added_at: '2026-09-22T12:00:00Z', has_account: true, last_sign_in_at: null }
   ];
 
   function callTeam(payload) {
@@ -612,25 +613,29 @@
   }
 
   function loadTeam() {
-    if (DEMO) { team = { loaded: true, me: 'may212@daum.net', admins: demoTeam }; renderTeam(); return; }
+    if (DEMO) { team = { loaded: true, me: 'may212@daum.net', myRole: 'owner', admins: demoTeam }; renderTeam(); return; }
     callTeam({ action: 'list' }).then(function (d) {
-      team = { loaded: true, me: d.me, admins: d.admins || [] };
+      team = { loaded: true, me: d.me, myRole: d.my_role || 'staff', admins: d.admins || [] };
       renderTeam();
     }).catch(function (err) {
       $('#teamList').innerHTML = '<li class="empty">' + esc(err.friendly ? err.message : '목록을 불러오지 못했어요.') + '</li>';
     });
   }
   function renderTeam() {
+    var iAmOwner = team.myRole === 'owner';
     $('#teamCount').textContent = team.admins.length + '명';
+    $('#teamNote').textContent = iAmOwner ? '' : '담당자 삭제와 비밀번호 재설정은 최고 관리자만 할 수 있어요.';
     $('#teamList').innerHTML = team.admins.map(function (a) {
-      var isMe = a.email === team.me;
+      var isMe = a.email === team.me, isOwner = a.role === 'owner';
       var initial = esc(a.email.charAt(0).toUpperCase());
       var seen = !a.has_account ? '<span class="warn">로그인 계정 없음</span>'
         : a.last_sign_in_at ? '최근 로그인 ' + esc(fmtDate(a.last_sign_in_at)) : '아직 로그인 전';
-      return '<li class="member"><span class="avatar">' + initial + '</span>' +
-        '<div class="member-info"><strong>' + esc(a.email) + (isMe ? '<span class="me-tag">나</span>' : '') + '</strong><span>' + seen + '</span></div>' +
-        (isMe ? '' : '<div class="member-actions"><button type="button" class="btn" data-reset="' + esc(a.email) + '">비밀번호 재설정</button>' +
-          '<button type="button" class="btn danger" data-remove="' + esc(a.email) + '">삭제</button></div>') + '</li>';
+      var canManage = iAmOwner && !isMe && !isOwner;
+      return '<li class="member"><span class="avatar' + (isOwner ? ' owner' : '') + '">' + initial + '</span>' +
+        '<div class="member-info"><strong>' + esc(a.email) + (isMe ? '<span class="me-tag">나</span>' : '') + '</strong>' +
+        '<span><b class="role ' + (isOwner ? 'owner' : 'staff') + '">' + (isOwner ? '최고 관리자' : '담당자') + '</b> · ' + seen + '</span></div>' +
+        (canManage ? '<div class="member-actions"><button type="button" class="btn" data-reset="' + esc(a.email) + '">비밀번호 재설정</button>' +
+          '<button type="button" class="btn danger" data-remove="' + esc(a.email) + '">삭제</button></div>' : '') + '</li>';
     }).join('') || '<li class="empty">등록된 관리자가 없어요.</li>';
   }
 

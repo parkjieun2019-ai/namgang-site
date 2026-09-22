@@ -13,6 +13,7 @@
 -- 0. 관리자 명단 ------------------------------------------------------------
 create table if not exists public.admin_users (
   email      text primary key,
+  role       text not null default 'staff' check (role in ('owner', 'staff')),  -- owner: 담당자 삭제·비밀번호 재설정 가능
   created_at timestamptz not null default now()
 );
 -- 정책을 만들지 않으므로 사이트·API로는 명단을 읽거나 바꿀 수 없음 (대시보드에서만 관리)
@@ -160,8 +161,9 @@ create policy "site_images_admin_write" on storage.objects
 -- 7. 관리자 등록 ---------------------------------------------------------------
 -- Authentication > Users 에서 관리자 계정을 만든 뒤, 같은 이메일을 아래처럼 등록하세요.
 -- (이메일을 실제 주소로 바꾸고 이 두 줄만 선택해서 Run)
--- insert into public.admin_users (email) values ('관리자이메일@example.com')
+-- insert into public.admin_users (email, role) values ('관리자이메일@example.com', 'owner')
 -- on conflict (email) do nothing;
 --
 -- 관리자 삭제:  delete from public.admin_users where email = '관리자이메일@example.com';
+-- 이후 담당자 추가·삭제는 관리자 페이지 > 담당자 메뉴에서 (삭제·비밀번호 재설정은 role = 'owner'만 가능)
 -- 관리자 목록:  select * from public.admin_users;
