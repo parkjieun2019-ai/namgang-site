@@ -6,94 +6,136 @@
   <meta name="robots" content="noindex, nofollow">
   <title>관리자 | 주식회사 남강포장</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='10' fill='%231b1b1b'/%3E%3Cg fill='none' stroke-linejoin='round' stroke-linecap='round' transform='translate(4.8 4.8) scale(.8)'%3E%3Cpath d='M24 4 43 15v19L24 45 5 34V15zM5 15l19 11 19-11M24 26v19' stroke='%23fff' stroke-width='2.6'/%3E%3Cpath d='M14.5 9.5 33.5 20.5v4.5' stroke='%23f2b233' stroke-width='4.4'/%3E%3C/g%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-  <link rel="stylesheet" href="admin.css?v=1">
+  <link rel="stylesheet" href="admin.css?v=3">
 </head>
 <body>
 
+  <!-- 박스 심볼 (여러 곳에서 재사용) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-box" viewBox="0 0 48 48"><g fill="none" stroke-linejoin="round" stroke-linecap="round"><path d="M24 4 43 15v19L24 45 5 34V15zM5 15l19 11 19-11M24 26v19" stroke="currentColor" stroke-width="2.6"/><path d="M14.5 9.5 33.5 20.5v4.5" stroke="#f2b233" stroke-width="4.4"/></g></symbol>
+    <symbol id="i-inbox" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13h4l1.5 3h5L16 13h4"/><path d="M5.5 5h13L21 13v5a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-5z"/></g></symbol>
+    <symbol id="i-photo" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="15" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="m21 16-5-5-8.5 8.5"/></g></symbol>
+    <symbol id="i-works" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></g></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M5 4h3.5l1.8 4.5-2.3 1.4a11 11 0 0 0 6.1 6.1l1.4-2.3L20 15.5V19a1 1 0 0 1-1 1A16 16 0 0 1 4 5a1 1 0 0 1 1-1z"/></symbol>
+    <symbol id="i-out" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h5a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-5"/><path d="M10 16l-4-4 4-4M6 12h10"/></g></symbol>
+    <symbol id="i-ext" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></g></symbol>
+  </svg>
+
   <!-- 로그인 -->
   <section class="login" id="loginView" hidden>
-    <form class="login-card" id="loginForm" novalidate>
-      <div class="brand">
-        <svg viewBox="0 0 48 48" fill="none" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M24 4 43 15v19L24 45 5 34V15zM5 15l19 11 19-11M24 26v19" stroke="currentColor" stroke-width="2.4"/><path d="M14.5 9.5 33.5 20.5v4.5" stroke="#f2b233" stroke-width="4"/></svg>
-        <strong>남강포장 관리자</strong>
+    <aside class="login-art" aria-hidden="true">
+      <div class="login-brand"><svg><use href="#i-box"/></svg><span>주식회사 남<em>강</em>포장</span></div>
+      <div class="login-copy">
+        <p class="login-en">Protecting Products.<br>Building Trust.</p>
+        <p class="login-ko">견적 문의와 사이트 사진, 납품 사례를 한곳에서 관리합니다.</p>
       </div>
-      <label class="field">이메일<input type="email" id="loginEmail" autocomplete="username"></label>
-      <label class="field">비밀번호<input type="password" id="loginPw" autocomplete="current-password"></label>
-      <p class="err" id="loginErr" role="alert"></p>
-      <button class="btn primary block" type="submit" id="loginBtn">로그인</button>
-    </form>
+      <p class="login-foot">namgangpack · Admin</p>
+    </aside>
+    <div class="login-side">
+      <form class="login-card" id="loginForm" novalidate>
+        <div class="login-mobile-brand"><svg><use href="#i-box"/></svg><span>주식회사 남<em>강</em>포장</span></div>
+        <div>
+          <h1>관리자 로그인</h1>
+          <p class="login-sub">등록된 담당자 계정으로 로그인하세요.</p>
+        </div>
+        <label class="field">이메일<input type="email" id="loginEmail" autocomplete="username" placeholder="name@example.com"></label>
+        <label class="field">비밀번호<input type="password" id="loginPw" autocomplete="current-password"></label>
+        <p class="err" id="loginErr" role="alert"></p>
+        <button class="btn primary block lg" type="submit" id="loginBtn">로그인</button>
+        <p class="login-help">계정이 없거나 비밀번호를 잊으셨다면 시스템 관리자에게 문의하세요.</p>
+      </form>
+    </div>
   </section>
 
   <!-- 관리 화면 -->
   <div class="shell" id="shellView" hidden>
-    <header class="topbar">
-      <div class="brand">
-        <svg viewBox="0 0 48 48" fill="none" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M24 4 43 15v19L24 45 5 34V15zM5 15l19 11 19-11M24 26v19" stroke="currentColor" stroke-width="2.4"/><path d="M14.5 9.5 33.5 20.5v4.5" stroke="#f2b233" stroke-width="4"/></svg>
-        <strong>남강포장 관리자</strong>
-        <span class="mode" id="modeBadge"></span>
+    <aside class="side">
+      <div class="side-brand">
+        <svg><use href="#i-box"/></svg>
+        <div><strong>남<em>강</em>포장</strong><small>관리자</small></div>
       </div>
-      <div class="top-actions">
-        <a class="btn ghost" href="../" target="_blank" rel="noopener">사이트 보기 ↗</a>
-        <button class="btn ghost" type="button" id="logoutBtn">로그아웃</button>
+
+      <nav class="tabs" role="tablist" aria-label="관리 메뉴">
+        <button type="button" role="tab" class="tab" data-tab="quotes" aria-selected="true"
+          data-title="견적 문의함" data-desc="홈페이지로 들어온 견적 문의를 확인하고 처리 상태를 관리해요.">
+          <svg><use href="#i-inbox"/></svg><span>견적 문의함</span><span class="badge" id="newBadge" hidden></span></button>
+        <button type="button" role="tab" class="tab" data-tab="photos" aria-selected="false"
+          data-title="사진 관리" data-desc="사진을 올리면 자리에 맞게 자르고 밝기·색감을 자동으로 맞춰요. 올리기 전에 미리보기에서 위치와 톤을 조정할 수 있어요.">
+          <svg><use href="#i-photo"/></svg><span>사진 관리</span></button>
+        <button type="button" role="tab" class="tab" data-tab="works" aria-selected="false"
+          data-title="납품 사례" data-desc="공개된 사례 중 위에서부터 4개가 메인과 설비·공정 페이지에 보여요.">
+          <svg><use href="#i-works"/></svg><span>납품 사례</span></button>
+        <button type="button" role="tab" class="tab" data-tab="settings" aria-selected="false"
+          data-title="연락처" data-desc="여기서 바꾼 연락처는 사이트의 모든 전화·이메일·카카오톡 버튼에 반영돼요.">
+          <svg><use href="#i-phone"/></svg><span>연락처</span></button>
+      </nav>
+
+      <div class="side-foot">
+        <div class="who"><span class="mode" id="modeBadge"></span><span class="who-email" id="whoEmail"></span></div>
+        <a class="side-link" href="../" target="_blank" rel="noopener"><svg><use href="#i-ext"/></svg><span>사이트 보기</span></a>
+        <button class="side-link" type="button" id="logoutBtn"><svg><use href="#i-out"/></svg><span>로그아웃</span></button>
       </div>
-    </header>
+    </aside>
 
-    <p class="demo-banner" id="demoBanner" hidden>
-      <b>데모 모드</b> Supabase를 연결하기 전이라 샘플 데이터가 보이고, 여기서 바꾼 내용은 저장되지 않아요. 사진 보정 기능은 그대로 써볼 수 있어요.
-    </p>
+    <div class="main">
+      <p class="demo-banner" id="demoBanner" hidden>
+        <b>데모 모드</b> 샘플 데이터가 보이고, 여기서 바꾼 내용은 저장되지 않아요. 사진 보정 기능은 그대로 써볼 수 있어요.
+      </p>
 
-    <nav class="tabs" role="tablist" aria-label="관리 메뉴">
-      <button type="button" role="tab" class="tab" data-tab="quotes" aria-selected="true">견적 문의함 <span class="badge" id="newBadge" hidden></span></button>
-      <button type="button" role="tab" class="tab" data-tab="photos" aria-selected="false">사진 관리</button>
-      <button type="button" role="tab" class="tab" data-tab="works" aria-selected="false">납품 사례</button>
-      <button type="button" role="tab" class="tab" data-tab="settings" aria-selected="false">연락처</button>
-    </nav>
+      <header class="page-head">
+        <div>
+          <h1 id="pageTitle">견적 문의함</h1>
+          <p id="pageDesc">홈페이지로 들어온 견적 문의를 확인하고 처리 상태를 관리해요.</p>
+        </div>
+        <button type="button" class="btn primary" id="addWorkBtn" hidden>+ 사례 추가</button>
+      </header>
 
-    <main class="content">
-      <!-- 견적 문의함 -->
-      <section class="panel" data-panel="quotes" role="tabpanel">
-        <div class="q-layout">
-          <div class="q-list-wrap">
-            <div class="filters" role="group" aria-label="상태로 보기">
-              <button type="button" class="chip is-on" data-filter="all">전체</button>
-              <button type="button" class="chip" data-filter="new">새 문의</button>
-              <button type="button" class="chip" data-filter="contacted">연락함</button>
-              <button type="button" class="chip" data-filter="done">완료</button>
+      <main class="content">
+        <!-- 견적 문의함 -->
+        <section class="panel" data-panel="quotes" role="tabpanel">
+          <div class="stats" id="qStats" role="group" aria-label="상태별 문의 수"></div>
+          <div class="q-layout">
+            <div class="q-list-wrap">
+              <div class="filters" role="group" aria-label="상태로 보기">
+                <button type="button" class="chip is-on" data-filter="all">전체</button>
+                <button type="button" class="chip" data-filter="new">새 문의</button>
+                <button type="button" class="chip" data-filter="contacted">연락함</button>
+                <button type="button" class="chip" data-filter="done">완료</button>
+              </div>
+              <ul class="q-list" id="quoteList"></ul>
             </div>
-            <ul class="q-list" id="quoteList"></ul>
+            <div class="q-detail" id="quoteDetail"><p class="empty">왼쪽 목록에서 문의를 선택하세요.</p></div>
           </div>
-          <div class="q-detail" id="quoteDetail"><p class="empty">왼쪽 목록에서 문의를 선택하세요.</p></div>
-        </div>
-      </section>
+        </section>
 
-      <!-- 사진 관리 -->
-      <section class="panel" data-panel="photos" role="tabpanel" hidden>
-        <p class="panel-lead">사진을 올리면 자리에 맞게 자르고 밝기·색감을 자동으로 맞춰요. 올리기 전에 미리보기에서 위치와 톤을 조정할 수 있어요.</p>
-        <div id="slotGroups"></div>
-      </section>
+        <!-- 사진 관리 -->
+        <section class="panel" data-panel="photos" role="tabpanel" hidden>
+          <div id="slotGroups"></div>
+        </section>
 
-      <!-- 납품 사례 -->
-      <section class="panel" data-panel="works" role="tabpanel" hidden>
-        <div class="panel-head">
-          <p class="panel-lead">공개된 사례 중 위에서부터 4개가 메인과 설비·공정 페이지에 보여요.</p>
-          <button type="button" class="btn primary" id="addWorkBtn">+ 사례 추가</button>
-        </div>
-        <ul class="work-list" id="workList"></ul>
-      </section>
+        <!-- 납품 사례 -->
+        <section class="panel" data-panel="works" role="tabpanel" hidden>
+          <ul class="work-list" id="workList"></ul>
+        </section>
 
-      <!-- 연락처 -->
-      <section class="panel" data-panel="settings" role="tabpanel" hidden>
-        <form class="settings" id="settingsForm" novalidate>
-          <p class="panel-lead">여기서 바꾼 연락처는 사이트의 모든 전화·이메일·카카오톡 버튼에 반영돼요.</p>
-          <label class="field">대표 전화<input type="tel" id="setPhone" placeholder="031-611-8366"><span class="err" data-err="phone"></span></label>
-          <label class="field">팩스<input type="tel" id="setFax" placeholder="031-611-8367"></label>
-          <label class="field">이메일<input type="email" id="setEmail" placeholder="may212@daum.net"><span class="err" data-err="email"></span></label>
-          <label class="field">카카오톡 채널 주소 <small>비워두면 카톡 버튼이 숨겨져요</small><input type="url" id="setKakao" placeholder="https://pf.kakao.com/_xxxxx/chat"><span class="err" data-err="kakao"></span></label>
-          <button type="submit" class="btn primary">저장</button>
-        </form>
-      </section>
-    </main>
+        <!-- 연락처 -->
+        <section class="panel" data-panel="settings" role="tabpanel" hidden>
+          <form class="settings" id="settingsForm" novalidate>
+            <div class="settings-grid">
+              <label class="field">대표 전화<input type="tel" id="setPhone" placeholder="031-611-8366"><span class="err" data-err="phone"></span></label>
+              <label class="field">팩스<input type="tel" id="setFax" placeholder="031-611-8367"></label>
+              <label class="field wide">이메일<input type="email" id="setEmail" placeholder="may212@daum.net"><span class="err" data-err="email"></span></label>
+              <label class="field wide">카카오톡 채널 주소 <small>비워두면 카톡 버튼이 숨겨져요</small><input type="url" id="setKakao" placeholder="https://pf.kakao.com/_xxxxx/chat"><span class="err" data-err="kakao"></span></label>
+            </div>
+            <div class="settings-foot"><button type="submit" class="btn primary">저장</button></div>
+          </form>
+        </section>
+      </main>
+    </div>
   </div>
 
   <!-- 사진 편집 창 -->
@@ -108,6 +150,7 @@
         <div class="pick" id="pickArea">
           <label class="dropzone" for="editorFile">
             <input type="file" id="editorFile" accept="image/*">
+            <svg class="dz-icon"><use href="#i-photo"/></svg>
             <strong>사진을 선택하거나 끌어다 놓으세요</strong>
             <span>휴대폰 원본 그대로 올려도 돼요. 크기·회전·밝기는 자동으로 맞춰요.</span>
           </label>
@@ -146,6 +189,6 @@
   <script src="../js/config.js?v=2"></script>
   <script src="../js/slots.js?v=1"></script>
   <script src="image-pipeline.js?v=1"></script>
-  <script src="admin.js?v=2"></script>
+  <script src="admin.js?v=3"></script>
 </body>
 </html>

@@ -9,7 +9,9 @@
   var cfg = window.SITE_CONFIG || {};
   var SLOTS = window.NAMGANG_SLOTS || [];
   var P = window.ImagePipeline;
-  var DEMO = !(cfg.supabaseUrl && cfg.supabaseAnonKey);
+  // 내 컴퓨터(localhost)에서 ?demo=1 을 붙이면 연결돼 있어도 샘플 데이터로 화면 확인
+  var LOCAL_DEMO = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) && /[?&]demo=1/.test(location.search);
+  var DEMO = LOCAL_DEMO || !(cfg.supabaseUrl && cfg.supabaseAnonKey);
   var SUPABASE_JS = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js';
   var STATUS = { new: '새 문의', contacted: '연락함', done: '완료' };
   var REPLY = { phone: '전화', kakao: '카카오톡', email: '이메일' };
@@ -124,6 +126,13 @@
     badge.classList.toggle('demo', DEMO);
     $('#demoBanner').hidden = !DEMO;
     $('#logoutBtn').hidden = DEMO;
+    $('#whoEmail').textContent = '';
+    if (sb) sb.auth.getSession().then(function (res) {
+      var u = res.data && res.data.session && res.data.session.user;
+      if (u) $('#whoEmail').textContent = u.email;
+    });
+    // 넓은 화면에서는 가장 최근 문의를 바로 펼쳐 보여줌
+    if (!state.selectedId && state.quotes.length && window.matchMedia('(min-width: 861px)').matches) state.selectedId = state.quotes[0].id;
     renderAll();
   }
   function renderAll() { renderQuotes(); renderDetail(); renderPhotos(); renderWorks(); renderSettings(); }
@@ -132,6 +141,9 @@
     tab.addEventListener('click', function () {
       $$('.tab').forEach(function (t) { t.setAttribute('aria-selected', String(t === tab)); });
       $$('.panel').forEach(function (p) { p.hidden = p.dataset.panel !== tab.dataset.tab; });
+      $('#pageTitle').textContent = tab.dataset.title;
+      $('#pageDesc').textContent = tab.dataset.desc;
+      $('#addWorkBtn').hidden = tab.dataset.tab !== 'works';
     });
   });
 
@@ -162,11 +174,40 @@
     if (!s || !(s.width || s.length || s.height)) return '상담 필요';
     return [s.width, s.length, s.height].map(function (v) { return v || '?'; }).join(' × ') + ' mm';
   }
+  function countBy(status) { return state.quotes.filter(function (q) { return q.status === status; }).length; }
+  function renderStats() {
+    var now = new Date();
+    var month = state.quotes.filter(function (q) {
+      var d = new Date(q.created_at);
+      return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+    }).length;
+    var cards = [
+      ['new', '새 문의', countBy('new'), '아직 연락 전'],
+      ['contacted', '연락함', countBy('contacted'), '상담 진행 중'],
+      ['done', '완료', countBy('done'), '처리 끝'],
+      ['all', (now.getMonth() + 1) + '월 접수', month, '전체 ' + state.quotes.length + '건']
+    ];
+    $('#qStats').innerHTML = cards.map(function (c) {
+      return '<button type="button" class="stat ' + c[0] + (c[0] !== 'all' && state.filter === c[0] ? ' is-on' : '') + '" data-filter="' + c[0] + '">' +
+        '<span class="stat-label">' + esc(c[1]) + '</span><span class="stat-num">' + c[2] + '</span><span class="stat-sub">' + esc(c[3]) + '</span></button>';
+    }).join('');
+  }
+  function setFilter(f) {
+    state.filter = f;
+    $$('.filters .chip').forEach(function (c) { c.classList.toggle('is-on', c.dataset.filter === f); });
+    renderQuotes();
+  }
+  $('#qStats').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-filter]');
+    if (b) setFilter(b.dataset.filter);
+  });
+
   function renderQuotes() {
-    var newCount = state.quotes.filter(function (q) { return q.status === 'new'; }).length;
+    var newCount = countBy('new');
     var badge = $('#newBadge');
     badge.textContent = newCount;
     badge.hidden = !newCount;
+    renderStats();
     var list = state.quotes.filter(function (q) { return state.filter === 'all' || q.status === state.filter; });
     var ul = $('#quoteList');
     if (!list.length) { ul.innerHTML = '<li class="empty">' + (state.quotes.length ? '이 상태의 문의가 없어요.' : '아직 접수된 문의가 없어요.') + '</li>'; return; }
@@ -187,11 +228,7 @@
     if (window.matchMedia('(max-width: 860px)').matches) $('#quoteDetail').scrollIntoView({ behavior: 'smooth' });
   });
   $$('.filters .chip').forEach(function (chip) {
-    chip.addEventListener('click', function () {
-      state.filter = chip.dataset.filter;
-      $$('.filters .chip').forEach(function (c) { c.classList.toggle('is-on', c === chip); });
-      renderQuotes();
-    });
+    chip.addEventListener('click', function () { setFilter(chip.dataset.filter); });
   });
 
   function renderDetail() {
@@ -199,20 +236,24 @@
     var q = state.quotes.filter(function (x) { return x.id === state.selectedId; })[0];
     if (!q) { box.innerHTML = '<p class="empty">왼쪽 목록에서 문의를 선택하세요.</p>'; return; }
     var tel = String(q.phone || '').replace(/[^0-9+]/g, '');
-    var rows = [
-      ['담당자', q.manager], ['연락처', q.phone], ['이메일', q.email], ['회신 방법', REPLY[q.reply] || q.reply],
-      ['박스 종류', q.box_type], ['규격', sizeText(q.size)], ['수량', q.quantity], ['골 종류', q.flute],
-      ['인쇄', q.printing], ['희망 납기', q.due_date], ['요청사항', q.message]
-    ].filter(function (r) { return r[1]; });
+    function dl(rows) {
+      rows = rows.filter(function (r) { return r[1]; });
+      if (!rows.length) return '<p class="q-meta">입력된 내용이 없어요.</p>';
+      return '<dl class="d-grid">' + rows.map(function (r) { return '<dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd>'; }).join('') + '</dl>';
+    }
+    var who = [['담당자', q.manager], ['연락처', q.phone], ['이메일', q.email], ['회신 방법', REPLY[q.reply] || q.reply]];
+    var spec = [['박스 종류', q.box_type], ['규격', sizeText(q.size)], ['수량', q.quantity], ['골 종류', q.flute], ['인쇄', q.printing], ['희망 납기', q.due_date]];
     box.innerHTML =
-      '<div class="d-head"><div><h2>' + esc(q.company) + '</h2><p>접수번호 ' + esc(q.receipt_no) + ' · ' + esc(fmtDate(q.created_at)) + (q.source === 'quick' ? ' · 메인 빠른 견적' : '') + '</p></div>' +
-      '<div class="d-actions">' + (tel ? '<a class="btn accent" href="tel:' + esc(tel) + '">전화 걸기</a>' : '') +
+      '<div class="d-head"><div class="d-title"><span class="pill ' + esc(q.status) + '">' + esc(STATUS[q.status] || q.status) + '</span><h2>' + esc(q.company) + '</h2>' +
+      '<p>접수번호 <b>' + esc(q.receipt_no) + '</b> · ' + esc(fmtDate(q.created_at)) + (q.source === 'quick' ? ' · 메인 빠른 견적' : '') + '</p></div>' +
+      '<div class="d-actions">' + (tel ? '<a class="btn accent" href="tel:' + esc(tel) + '"><svg><use href="#i-phone"/></svg>전화 걸기</a>' : '') +
       (q.email ? '<a class="btn" href="mailto:' + esc(q.email) + '?subject=' + encodeURIComponent('[남강포장] 견적 회신 (' + q.receipt_no + ')') + '">메일 보내기</a>' : '') + '</div></div>' +
-      '<dl class="d-grid">' + rows.map(function (r) { return '<dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd>'; }).join('') + '</dl>' +
-      '<div class="d-block"><h3>첨부 파일</h3><div class="attach" id="attachList">' + (q.attachments && q.attachments.length ? '<span class="q-meta">불러오는 중…</span>' : '<span class="q-meta">없음</span>') + '</div></div>' +
-      '<div class="d-block"><h3>처리 상태</h3><div class="status-set" role="group" aria-label="처리 상태">' +
-      Object.keys(STATUS).map(function (k) { return '<button type="button" data-status="' + k + '" aria-pressed="' + (q.status === k) + '">' + STATUS[k] + '</button>'; }).join('') + '</div></div>' +
-      '<div class="d-block memo"><h3>메모 <small class="q-meta">관리자만 보여요</small></h3><textarea id="memoInput" placeholder="통화 내용, 견적 금액 등">' + esc(q.admin_memo || '') + '</textarea><button type="button" class="btn" id="memoSave">메모 저장</button></div>';
+      '<div class="d-cols"><section class="d-sec"><h3>고객 정보</h3>' + dl(who) + '</section><section class="d-sec"><h3>박스 사양</h3>' + dl(spec) + '</section></div>' +
+      (q.message ? '<section class="d-sec"><h3>요청사항</h3><p class="d-msg">' + esc(q.message) + '</p></section>' : '') +
+      '<section class="d-sec"><h3>첨부 파일</h3><div class="attach" id="attachList">' + (q.attachments && q.attachments.length ? '<span class="q-meta">불러오는 중…</span>' : '<span class="q-meta">없음</span>') + '</div></section>' +
+      '<section class="d-sec d-work"><div><h3>처리 상태</h3><div class="status-set" role="group" aria-label="처리 상태">' +
+      Object.keys(STATUS).map(function (k) { return '<button type="button" class="' + k + '" data-status="' + k + '" aria-pressed="' + (q.status === k) + '">' + STATUS[k] + '</button>'; }).join('') + '</div></div>' +
+      '<div class="memo"><h3>메모 <small>관리자만 보여요</small></h3><textarea id="memoInput" placeholder="통화 내용, 견적 금액 등">' + esc(q.admin_memo || '') + '</textarea><button type="button" class="btn" id="memoSave">메모 저장</button></div></section>';
 
     $$('.status-set button', box).forEach(function (b) {
       b.addEventListener('click', function () { updateQuote(q, { status: b.dataset.status }, '상태를 바꿨어요.'); });
@@ -252,13 +293,14 @@
       g.slots.push(s);
     });
     $('#slotGroups').innerHTML = groups.map(function (g) {
-      return '<section class="slot-group"><h2>' + esc(g.name) + '</h2><div class="slot-grid">' + g.slots.map(function (s) {
+      var custom = g.slots.filter(function (s) { return state.photos[s.key]; }).length;
+      return '<section class="slot-group"><div class="slot-group-head"><h2>' + esc(g.name) + '</h2><span class="slot-count' + (custom ? ' has' : '') + '">' + custom + ' / ' + g.slots.length + ' 교체</span></div><div class="slot-grid">' + g.slots.map(function (s) {
         var cur = state.photos[s.key];
         var ratioText = ratioLabel(s.ratio);
-        return '<article class="slot"><div class="slot-thumb" style="aspect-ratio:' + s.ratio + '">' +
-          (cur ? '<img src="' + esc(cur.url) + '" alt="">' : '기본 사진 사용 중') + '</div>' +
+        return '<article class="slot' + (cur ? ' is-custom' : '') + '"><div class="slot-thumb" style="aspect-ratio:' + s.ratio + '">' +
+          (cur ? '<img src="' + esc(cur.url) + '" alt="">' : '<span>기본 사진 사용 중</span>') + '<span class="slot-ratio">' + esc(ratioText) + '</span></div>' +
           '<div class="slot-body"><span class="slot-title">' + esc(s.label) + '</span>' +
-          '<span class="slot-meta' + (cur ? ' custom' : '') + '">' + (cur ? '직접 올린 사진' + (cur.updated_at ? ' · ' + esc(fmtDate(cur.updated_at)) : '') : ratioText + ' · 가로 ' + s.width + 'px') + '</span>' +
+          '<span class="slot-meta' + (cur ? ' custom' : '') + '">' + (cur ? '직접 올린 사진' + (cur.updated_at ? ' · ' + esc(fmtDate(cur.updated_at)) : '') : '가로 ' + s.width + 'px로 저장') + '</span>' +
           '<div class="slot-actions"><button type="button" class="btn" data-slot="' + esc(s.key) + '">사진 바꾸기</button>' +
           (cur ? '<button type="button" class="btn ghost" data-revert="' + esc(s.key) + '">기본으로</button>' : '') + '</div></div></article>';
       }).join('') + '</div></section>';
@@ -448,8 +490,9 @@
     var ul = $('#workList');
     if (!state.works.length) { ul.innerHTML = '<li class="empty">아직 등록된 사례가 없어요. 사례가 없으면 사이트에는 기본 사진이 보여요.</li>'; return; }
     ul.innerHTML = state.works.map(function (w, i) {
-      return '<li class="work"><img src="' + esc(w.image_url || '') + '" alt="">' +
-        '<div class="work-info"><strong>' + esc(w.title) + (w.published ? '' : '<span class="hidden-tag">숨김</span>') + '</strong><span>' + esc(w.industry || '업종 없음') + '</span></div>' +
+      return '<li class="work' + (w.published ? '' : ' is-hidden') + '"><span class="work-no">' + (i + 1) + '</span><img src="' + esc(w.image_url || '') + '" alt="">' +
+        '<div class="work-info"><strong>' + esc(w.title) + '</strong><span>' + esc(w.industry || '업종 없음') + '</span>' +
+        '<span class="vis ' + (w.published ? 'on' : 'off') + '">' + (w.published ? (state.works.slice(0, i).filter(function (x) { return x.published; }).length < 4 ? '사이트에 표시 중' : '공개 · 대기') : '숨김') + '</span></div>' +
         '<div class="work-actions">' +
         '<button type="button" class="btn ghost" data-move="' + i + '" data-dir="-1" aria-label="위로" ' + (i === 0 ? 'disabled' : '') + '>↑</button>' +
         '<button type="button" class="btn ghost" data-move="' + i + '" data-dir="1" aria-label="아래로" ' + (i === state.works.length - 1 ? 'disabled' : '') + '>↓</button>' +
