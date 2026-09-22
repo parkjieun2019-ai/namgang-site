@@ -22,7 +22,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-  <link rel="stylesheet" href="css/style.css?v=2026092211">
+  <link rel="stylesheet" href="css/style.css?v=2026092212">
 </head>
 <body>
 
@@ -109,9 +109,9 @@
       <div class="container wz-wrap">
         <div class="wz-main">
           <ol class="wz-stepper">
-            <li class="wz-step is-active" aria-current="step"><span class="n">STEP 01</span><span class="t">박스 종류</span></li>
-            <li class="wz-step"><span class="n">STEP 02</span><span class="t">규격·수량</span></li>
-            <li class="wz-step"><span class="n">STEP 03</span><span class="t">연락처</span></li>
+            <li class="wz-step is-active" aria-current="step"><span class="n" aria-hidden="true">1</span><span class="t">박스 종류<small>어떤 박스인지</small></span></li>
+            <li class="wz-step"><span class="n" aria-hidden="true">2</span><span class="t">규격·수량<small>크기와 수량</small></span></li>
+            <li class="wz-step"><span class="n" aria-hidden="true">3</span><span class="t">연락처<small>회신받을 곳</small></span></li>
           </ol>
 
           <form id="quoteForm" novalidate>
@@ -119,6 +119,7 @@
 
             <!-- STEP 1 -->
             <div class="wz-panel" data-step-panel>
+              <p class="wz-count">STEP 1 <span>/ 3</span></p>
               <h2 tabindex="-1">어떤 박스가 필요하세요?</h2>
               <p class="wz-lead">가장 가까운 것을 골라주세요. 잘 모르셔도 상담으로 정해드립니다.</p>
 
@@ -157,7 +158,7 @@
                       <span class="desc">칸막이, 중량물, 특수 형태</span>
                     </span>
                   </label>
-                  <label class="choice-card">
+                  <label class="choice-card wide">
                     <input type="radio" name="boxType" value="unknown">
                     <span class="box">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.4 2.3c-.6.3-.9.8-.9 1.5v.4"/><path d="M12 16.8v.1"/></svg>
@@ -172,6 +173,7 @@
 
             <!-- STEP 2 -->
             <div class="wz-panel" data-step-panel hidden>
+              <p class="wz-count">STEP 2 <span>/ 3</span></p>
               <h2 tabindex="-1">규격과 수량을 알려주세요</h2>
               <p class="wz-lead">대략적인 값이어도 괜찮습니다. 정확한 사양은 상담하며 맞춰드려요.</p>
 
@@ -247,6 +249,7 @@
 
             <!-- STEP 3 -->
             <div class="wz-panel" data-step-panel hidden>
+              <p class="wz-count">STEP 3 <span>/ 3</span></p>
               <h2 tabindex="-1">연락처를 남겨주세요</h2>
               <p class="wz-lead">확인 후 원하시는 방법으로 견적을 안내해 드립니다.</p>
 
@@ -349,7 +352,7 @@
     </section>
 
     <!-- FAQ -->
-    <section class="sec sec-gray">
+    <section class="sec">
       <div class="container">
         <div class="sec-head reveal">
           <h2 class="en">Quote <b>FAQ</b></h2>
@@ -433,10 +436,10 @@
     <button type="button" class="float-top" aria-label="맨 위로">TOP</button>
   </div>
 
-  <script src="js/config.js?v=2026092211"></script>
-  <script src="js/main.js?v=2026092211"></script>
-  <script src="js/slots.js?v=2026092211"></script>
-  <script src="js/site-data.js?v=2026092211"></script>
-  <script src="js/quote-form.js?v=2026092211"></script>
+  <script src="js/config.js?v=2026092212"></script>
+  <script src="js/main.js?v=2026092212"></script>
+  <script src="js/slots.js?v=2026092212"></script>
+  <script src="js/site-data.js?v=2026092212"></script>
+  <script src="js/quote-form.js?v=2026092212"></script>
 </body>
 </html>
