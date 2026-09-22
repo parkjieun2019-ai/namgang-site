@@ -1063,3 +1063,20 @@ h1, h2, h3, h4 { line-height: 1.35; letter-spacing: -0.02em; }
 .wz-group > legend.wz-label { float: left; width: 100%; }
 .wz-group > legend.wz-label + * { clear: both; }
 .wz-err { font-size: 14px; }
+
+/* PC 카톡 버튼 → QR 코드 창 */
+.kakao-dlg { width: min(380px, calc(100vw - 32px)); padding: 36px 32px 28px; border: 0; border-radius: 0; background: #fff; color: var(--text); text-align: center; box-shadow: 0 24px 64px rgba(0,0,0,.28); }
+.kakao-dlg::backdrop { background: rgba(17,17,17,.6); }
+.kakao-dlg-close { position: absolute; top: 10px; right: 10px; width: 40px; height: 40px; border: 0; background: none; font-size: 28px; line-height: 1; color: #999; }
+.kakao-dlg-close:hover { color: var(--ink); }
+.kakao-dlg-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; color: var(--ink); }
+.kakao-dlg-badge { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: #fee500; color: #191919; }
+.kakao-dlg-badge svg { width: 16px; height: 16px; }
+.kakao-dlg h2 { margin-top: 12px; font-size: 20px; font-weight: 800; line-height: 1.4; color: var(--ink); letter-spacing: -0.02em; text-wrap: balance; }
+.kakao-dlg-qr { width: 200px; height: 200px; margin: 22px auto 0; padding: 14px; border: 1px solid var(--line); display: grid; place-items: center; background: #fff; }
+.kakao-dlg-qr svg { width: 100%; height: 100%; display: block; }
+.kakao-dlg-qr span { font-size: 13px; color: var(--muted); }
+.kakao-dlg-help { margin-top: 12px; font-size: 14px; color: var(--muted); }
+.kakao-dlg-open { width: 100%; height: 50px; margin-top: 20px; }
+.kakao-dlg-tel { margin-top: 14px; font-size: 14px; color: var(--muted); }
+.kakao-dlg-tel a { font-family: var(--font-en); font-weight: 700; color: var(--ink); }

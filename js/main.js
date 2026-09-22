@@ -26,6 +26,73 @@
     document.querySelectorAll('[data-fax-text]').forEach(function (el) { el.textContent = config.fax; });
   }
 
+  /* ---------- PC에서 카톡 버튼: QR 코드 창 ----------
+     휴대폰은 링크 그대로(카톡 앱이 바로 열림). PC는 카카오 로그인 대신
+     휴대폰으로 QR을 찍거나 PC 카카오톡으로 열 수 있게 작은 창을 띄운다. */
+  var QR_JS = 'https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js';
+  var kakaoDlg = null;
+  function isDesktop() {
+    return window.matchMedia('(hover: hover) and (pointer: fine)').matches && window.innerWidth > 860;
+  }
+  function loadQr() {
+    if (window.qrcode) return Promise.resolve();
+    return new Promise(function (resolve, reject) {
+      var s = document.createElement('script');
+      s.src = QR_JS;
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
+  function buildKakaoDialog() {
+    var d = document.createElement('dialog');
+    d.className = 'kakao-dlg';
+    d.setAttribute('aria-labelledby', 'kakaoDlgTitle');
+    d.innerHTML =
+      '<button type="button" class="kakao-dlg-close" aria-label="닫기">×</button>' +
+      '<p class="kakao-dlg-eyebrow"><span class="kakao-dlg-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3C6.5 3 2 6.6 2 11c0 2.8 1.9 5.3 4.7 6.7l-1 3.6c-.1.3.3.6.6.4l4.2-2.8c.5.1 1 .1 1.5.1 5.5 0 10-3.6 10-8S17.5 3 12 3z"/></svg></span>카카오톡 상담</p>' +
+      '<h2 id="kakaoDlgTitle">휴대폰으로 찍으면 바로 채팅이 열려요</h2>' +
+      '<div class="kakao-dlg-qr" data-qr><span>QR 코드를 만드는 중…</span></div>' +
+      '<p class="kakao-dlg-help">휴대폰 카메라로 QR 코드를 비춰 주세요.</p>' +
+      '<a class="btn btn-kakao kakao-dlg-open" target="_blank" rel="noopener" data-open>PC 카카오톡으로 열기</a>' +
+      '<p class="kakao-dlg-tel">전화 상담 <a data-tel-link data-tel-text></a></p>';
+    document.body.appendChild(d);
+    d.querySelector('.kakao-dlg-close').addEventListener('click', function () { d.close(); });
+    d.addEventListener('click', function (e) { if (e.target === d) d.close(); }); // 바깥 누르면 닫기
+    d.querySelector('[data-open]').addEventListener('click', function () { setTimeout(function () { d.close(); }, 100); });
+    applyContacts();
+    return d;
+  }
+  function openKakaoDialog(url) {
+    if (!kakaoDlg) kakaoDlg = buildKakaoDialog();
+    kakaoDlg.querySelector('[data-open]').setAttribute('href', url);
+    var box = kakaoDlg.querySelector('[data-qr]');
+    if (box.dataset.url !== url) {
+      box.dataset.url = url;
+      loadQr().then(function () {
+        var qr = window.qrcode(0, 'M');
+        qr.addData(url);
+        qr.make();
+        box.innerHTML = qr.createSvgTag({ cellSize: 6, margin: 0, scalable: true, alt: '카카오톡 채팅 QR 코드' });
+      }).catch(function () {
+        box.innerHTML = '<span>QR 코드를 불러오지 못했어요. 아래 버튼을 눌러 주세요.</span>';
+      });
+    }
+    kakaoDlg.showModal();
+  }
+  function initKakaoPopup() {
+    if (typeof HTMLDialogElement !== 'function') return; // 아주 오래된 브라우저는 링크 그대로
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest('[data-kakao-link]');
+      if (!a || a.closest('.kakao-dlg') || !isDesktop()) return;
+      var url = a.getAttribute('href');
+      if (!/^https?:\/\//.test(url || '')) return;
+      if (e.ctrlKey || e.metaKey || e.shiftKey) return; // 새 탭으로 열려는 경우는 그대로
+      e.preventDefault();
+      openKakaoDialog(url);
+    });
+  }
+
   /* ---------- 헤더: 스크롤하면 흰 배경 ---------- */
   function initHeader() {
     var header = document.querySelector('.site-header');
@@ -332,6 +399,7 @@
   document.addEventListener('DOMContentLoaded', function () {
     applyContacts();
     initHeader();
+    initKakaoPopup();
     initFullmenu();
     initHero();
     initReveal();
