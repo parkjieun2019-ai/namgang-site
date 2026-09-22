@@ -1080,3 +1080,13 @@ h1, h2, h3, h4 { line-height: 1.35; letter-spacing: -0.02em; }
 .kakao-dlg-open { width: 100%; height: 50px; margin-top: 20px; }
 .kakao-dlg-tel { margin-top: 14px; font-size: 14px; color: var(--muted); }
 .kakao-dlg-tel a { font-family: var(--font-en); font-weight: 700; color: var(--ink); }
+/* PC 이메일 링크 → 주소 복사 창 (카톡 창과 같은 틀) */
+.kakao-dlg-badge.mail { background: var(--accent); color: var(--ink); }
+.kakao-dlg-badge.mail svg { width: 15px; height: 15px; }
+.mail-dlg-addr { margin-top: 22px; display: flex; align-items: center; gap: 8px; padding: 8px 8px 8px 16px; border: 1px solid var(--line); background: var(--gray-bg); }
+.mail-dlg-addr strong { flex: 1; min-width: 0; text-align: left; font-family: var(--font-en); font-size: 17px; font-weight: 700; color: var(--ink); overflow-wrap: anywhere; user-select: all; }
+.mail-dlg-addr .btn { height: 40px; padding: 0 14px; font-size: 14px; flex: none; }
+.mail-dlg-done { min-height: 1.5em; margin-top: 8px; font-size: 13px; color: #2f7d4f; font-weight: 600; }
+.mail-dlg-actions { margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.mail-dlg-actions .btn { height: 46px; font-size: 14px; padding: 0 10px; }
+.kakao-dlg-tel a[href^="contact"] { font-family: var(--font-ko); text-decoration: underline; text-underline-offset: 3px; }

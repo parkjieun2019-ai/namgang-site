@@ -93,6 +93,70 @@
     });
   }
 
+  /* ---------- PC에서 이메일 링크: 주소 복사 창 ----------
+     mailto: 는 PC에 메일 프로그램이 설정돼 있어야만 열린다(웹메일 사용자는 반응 없음).
+     PC에서는 주소 복사·메일 앱·지메일 중 고를 수 있게 한다. 휴대폰은 메일 앱이 바로 열림. */
+  var mailDlg = null;
+  // 복사: 클립보드 API → 안 되면 창 안에 임시 입력칸을 만들어 복사 (모달 바깥은 선택이 막혀 있음)
+  function copyText(text, host) {
+    var fallback = function () {
+      return new Promise(function (resolve, reject) {
+        var t = document.createElement('textarea');
+        t.value = text; t.setAttribute('readonly', ''); t.style.cssText = 'position:absolute;left:-9999px;opacity:0';
+        host.appendChild(t); t.select();
+        var ok = false;
+        try { ok = document.execCommand('copy'); } catch (err) { ok = false; }
+        host.removeChild(t);
+        if (ok) resolve(); else reject(new Error('copy failed'));
+      });
+    };
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text).catch(fallback);
+    return fallback();
+  }
+  function buildMailDialog() {
+    var d = document.createElement('dialog');
+    d.className = 'kakao-dlg mail-dlg';
+    d.setAttribute('aria-labelledby', 'mailDlgTitle');
+    d.innerHTML =
+      '<button type="button" class="kakao-dlg-close" aria-label="닫기">×</button>' +
+      '<p class="kakao-dlg-eyebrow"><span class="kakao-dlg-badge mail" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="m3 7 9 6 9-6"/></svg></span>이메일 문의</p>' +
+      '<h2 id="mailDlgTitle">아래 주소로 메일을 보내 주세요</h2>' +
+      '<div class="mail-dlg-addr"><strong data-addr></strong><button type="button" class="btn btn-dark" data-copy>주소 복사</button></div>' +
+      '<p class="mail-dlg-done" data-copied role="status"></p>' +
+      '<div class="mail-dlg-actions"><a class="btn btn-line" data-mailto>메일 앱으로 열기</a><a class="btn btn-line" data-gmail target="_blank" rel="noopener">지메일로 쓰기</a></div>' +
+      '<p class="kakao-dlg-tel">견적은 <a href="contact.html#quote">견적 요청하기</a>가 더 빨라요</p>';
+    document.body.appendChild(d);
+    d.querySelector('.kakao-dlg-close').addEventListener('click', function () { d.close(); });
+    d.addEventListener('click', function (e) { if (e.target === d) d.close(); });
+    d.querySelector('[data-copy]').addEventListener('click', function () {
+      var msg = d.querySelector('[data-copied]');
+      copyText(d.querySelector('[data-addr]').textContent, d).then(function () {
+        msg.textContent = '주소를 복사했어요. 쓰시는 메일에서 받는 사람 칸에 붙여 넣으세요.';
+      }).catch(function () { msg.textContent = '복사하지 못했어요. 주소를 직접 선택해 복사해 주세요.'; });
+    });
+    return d;
+  }
+  function openMailDialog() {
+    if (!mailDlg) mailDlg = buildMailDialog();
+    var email = config.email || '';
+    var subject = '[남강포장] 견적 문의';
+    mailDlg.querySelector('[data-addr]').textContent = email;
+    mailDlg.querySelector('[data-copied]').textContent = '';
+    mailDlg.querySelector('[data-mailto]').setAttribute('href', 'mailto:' + email + '?subject=' + encodeURIComponent(subject));
+    mailDlg.querySelector('[data-gmail]').setAttribute('href', 'https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(email) + '&su=' + encodeURIComponent(subject));
+    mailDlg.showModal();
+  }
+  function initMailPopup() {
+    if (typeof HTMLDialogElement !== 'function') return;
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest('[data-mail-link]');
+      if (!a || a.closest('.mail-dlg') || !isDesktop() || !config.email) return;
+      if (e.ctrlKey || e.metaKey || e.shiftKey) return;
+      e.preventDefault();
+      openMailDialog();
+    });
+  }
+
   /* ---------- 헤더: 스크롤하면 흰 배경 ---------- */
   function initHeader() {
     var header = document.querySelector('.site-header');
@@ -400,6 +464,7 @@
     applyContacts();
     initHeader();
     initKakaoPopup();
+    initMailPopup();
     initFullmenu();
     initHero();
     initReveal();
