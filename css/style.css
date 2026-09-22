@@ -17,7 +17,7 @@
   --accent-dark: #d9961a;
   --kraft: #b58a5a;        /* 골판지 브라운 */
 
-  --font-ko: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  --font-ko: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
   --font-en: 'Montserrat', var(--font-ko);
 
   --container: 1280px;
@@ -862,7 +862,7 @@ main section[id] { scroll-margin-top: 130px; }
   .process-item { flex: 0 0 64%; aspect-ratio: 3 / 4; scroll-snap-align: start; }
   .hero-step { padding: 16px 6px 20px 0; }
   .hero-step .label { font-size: 13px; }
-  .hero-step .num { font-size: 11px; }
+  .hero-step .num { font-size: 12px; }
 }
 @media (max-width: 560px) {
   .qform { grid-template-columns: 1fr; }
@@ -955,4 +955,10 @@ h1, h2, h3, h4 { line-height: 1.35; letter-spacing: -0.02em; }
   .info-table dt { color: var(--accent-text); }
   .product-card p, .trio-card p, .type-card p, .info-card p, .job-card p,
   .faq-list .answer, .feature-list span { font-size: 15px; }
+}
+
+/* 휴대폰에서 표가 옆으로 넘칠 때 안내 */
+.table-hint { display: none; }
+@media (max-width: 640px) {
+  .table-hint { display: block; margin-bottom: 8px; font-size: 13px; color: var(--muted); text-align: right; }
 }
