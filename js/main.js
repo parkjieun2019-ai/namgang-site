@@ -168,20 +168,162 @@
         return;
       }
 
-      // TODO: Supabase 연결 후 submitQuote(data)로 실제 저장
-      submitQuote(new FormData(form)).then(function () {
+      var btn = form.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      submitQuote(new FormData(form)).then(function (result) {
         form.querySelectorAll('.qfield, .qform-bottom').forEach(function (el) { el.hidden = true; });
+        if (result && result.mode === 'mail') {
+          done.querySelector('strong').textContent = '메일 앱에서 전송을 완료해 주세요';
+          done.querySelector('p').innerHTML = '견적 내용이 담긴 메일 창이 열렸습니다. <b>보내기</b>를 눌러야 접수가 완료됩니다.<br>메일 앱이 열리지 않으면 ' + config.phone + '으로 전화 주세요.';
+        }
         done.classList.add('is-show');
+      }).catch(function () {
+        btn.disabled = false;
       });
     });
   }
 
-  // 견적 전송은 이 함수 하나에서만 처리한다 (저장소가 바뀌어도 여기만 수정)
-  // 메인 빠른 견적(FormData)과 견적문의 페이지(객체) 모두 이 함수를 쓴다
+  /* ---------- 견적 전송 ----------
+   * 견적 전송은 이 부분에서만 처리한다. 메인 빠른 견적(FormData)과 견적문의 페이지(객체) 모두 사용.
+   * · Supabase가 설정돼 있으면: 첨부 업로드 후 quotes 테이블에 저장 (mode: 'online')
+   * · 설정이 없거나 저장에 실패하면: 견적 내용을 담은 메일 창을 연다 (mode: 'mail')
+   *   → Supabase 무료 플랜이 일시정지돼도 문의를 놓치지 않는다
+   */
+  var SUPABASE_JS = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js';
+  var supabaseReady = null;
+
+  function loadSupabase() {
+    if (!config.supabaseUrl || !config.supabaseAnonKey) return Promise.resolve(null);
+    if (!supabaseReady) {
+      supabaseReady = new Promise(function (resolve, reject) {
+        if (window.supabase) return resolve();
+        var s = document.createElement('script');
+        s.src = SUPABASE_JS;
+        s.onload = resolve;
+        s.onerror = function () { reject(new Error('supabase-js를 불러오지 못했습니다')); };
+        document.head.appendChild(s);
+      }).then(function () {
+        return window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey, { auth: { persistSession: false } });
+      });
+      supabaseReady.catch(function () { supabaseReady = null; });
+    }
+    return supabaseReady;
+  }
+
+  function makeReceiptNo() {
+    var d = new Date();
+    var ymd = String(d.getFullYear()).slice(2) + String(d.getMonth() + 1).padStart(2, '0') + String(d.getDate()).padStart(2, '0');
+    return 'NG-' + ymd + '-' + String(Math.floor(Math.random() * 10000)).padStart(4, '0');
+  }
+
+  // 두 폼의 데이터를 같은 모양으로 맞춘다
+  function normalizeQuote(data) {
+    if (data instanceof FormData) {
+      var get = function (k) { return String(data.get(k) || '').trim(); };
+      var w = get('width'), l = get('length'), h = get('height');
+      return {
+        receiptNo: makeReceiptNo(),
+        source: 'quick',
+        boxType: get('boxType'),
+        size: (w || l || h) ? { width: w, length: l, height: h } : null,
+        quantity: get('quantity'),
+        message: get('message'),
+        company: get('company'),
+        phone: get('contact'),
+        reply: 'phone',
+        replyLabel: '전화',
+        attachments: []
+      };
+    }
+    var q = Object.assign({ source: 'contact' }, data);
+    q.boxType = data.boxTypeLabel || data.boxType;
+    return q;
+  }
+
+  function uploadAttachments(client, q) {
+    return Promise.all((q.attachments || []).map(function (a, i) {
+      // 저장소 경로에는 영문·숫자만 쓸 수 있어 한글 파일명은 photo/file로 바꾼다
+      var ext = ((a.name || '').match(/\.[A-Za-z0-9]{1,5}$/) || [''])[0].toLowerCase();
+      var base = (a.name || '').replace(/\.[^.]*$/, '').replace(/[^A-Za-z0-9_-]+/g, '').slice(0, 40);
+      if (!base) base = /^image\//.test(a.type) ? 'photo' : 'file';
+      var path = q.receiptNo + '/' + (i + 1) + '-' + base + ext;
+      return client.storage.from('quote-attachments')
+        .upload(path, a.blob, { contentType: a.type || 'application/octet-stream', upsert: false })
+        .then(function (res) { if (res.error) throw res.error; return path; });
+    }));
+  }
+
+  function saveOnline(client, q) {
+    return uploadAttachments(client, q).then(function (paths) {
+      return client.from('quotes').insert({
+        receipt_no: q.receiptNo,
+        source: q.source,
+        box_type: q.boxType || null,
+        size: q.size || null,
+        quantity: q.quantity || null,
+        flute: q.flute || null,
+        printing: q.printing || null,
+        due_date: q.dueDate || null,
+        message: q.message || null,
+        company: q.company,
+        manager: q.manager || null,
+        phone: q.phone,
+        email: q.email || null,
+        reply: q.reply || null,
+        attachments: paths
+      });
+    }).then(function (res) {
+      if (res.error) throw res.error;
+      return { mode: 'online', receiptNo: q.receiptNo };
+    });
+  }
+
+  function sendByMail(q) {
+    var size = q.size && (q.size.width || q.size.length || q.size.height)
+      ? [q.size.width, q.size.length, q.size.height].map(function (v) { return v || '?'; }).join(' × ') + ' mm (가로 × 세로 × 높이)'
+      : '상담 필요';
+    var lines = [
+      '[홈페이지 견적 문의] 접수번호 ' + q.receiptNo,
+      '',
+      '회사명: ' + q.company,
+      '담당자: ' + (q.manager || '-'),
+      '연락처: ' + q.phone,
+      '이메일: ' + (q.email || '-'),
+      '회신 방법: ' + (q.replyLabel || '-'),
+      '',
+      '박스 종류: ' + (q.boxType || '-'),
+      '규격: ' + size,
+      '수량: ' + (q.quantity || '-'),
+      '골 종류: ' + (q.flute || '-'),
+      '인쇄: ' + (q.printing || '-'),
+      '희망 납기: ' + (q.dueDate || '협의'),
+      '',
+      '요청사항:',
+      q.message || '-'
+    ];
+    if (q.attachments && q.attachments.length) {
+      lines.push('', '※ 첨부하신 사진·도면 ' + q.attachments.length + '개는 이 메일에 직접 첨부해 주세요.');
+    }
+    var href = 'mailto:' + config.email +
+      '?subject=' + encodeURIComponent('[견적문의] ' + q.company + ' (' + q.receiptNo + ')') +
+      '&body=' + encodeURIComponent(lines.join('\n'));
+    var a = document.createElement('a');
+    a.href = href;
+    a.hidden = true;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    return { mode: 'mail', receiptNo: q.receiptNo };
+  }
+
   function submitQuote(data) {
-    var preview = data instanceof FormData ? Object.fromEntries(data.entries()) : data;
-    console.info('[demo] 견적 접수', preview);
-    return new Promise(function (resolve) { setTimeout(resolve, 600); });
+    var q = normalizeQuote(data);
+    return loadSupabase()
+      .then(function (client) { return client ? saveOnline(client, q) : sendByMail(q); })
+      .catch(function (err) {
+        console.warn('온라인 접수 실패, 메일로 전환합니다', err);
+        return sendByMail(q);
+      });
   }
   window.submitQuote = submitQuote;
 

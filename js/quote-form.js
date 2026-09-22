@@ -284,7 +284,7 @@
       setError('submit', '');
 
       Promise.resolve(typeof window.submitQuote === 'function' ? window.submitQuote(payload) : null)
-        .then(function () { showDone(payload); })
+        .then(function (result) { showDone(payload, result); })
         .catch(function () {
           submitBtn.disabled = false;
           submitBtn.textContent = '견적 요청하기';
@@ -296,6 +296,8 @@
       return {
         receiptNo: makeReceiptNo(),
         boxType: f.boxType.value,
+        boxTypeLabel: LABELS.boxType[f.boxType.value],
+        replyLabel: LABELS.reply[f.reply.value],
         size: f.sizeUnknown.checked ? null : { width: Number(f.sizeW.value), length: Number(f.sizeL.value), height: Number(f.sizeH.value) },
         quantity: f.quantity.value,
         flute: f.flute.value,
@@ -311,11 +313,19 @@
       };
     }
 
-    function showDone(payload) {
+    function showDone(payload, result) {
       form.hidden = true;
       stepper.hidden = true;
       done.querySelector('[data-receipt]').textContent = payload.receiptNo;
       done.querySelector('[data-reply-text]').textContent = LABELS.reply[payload.reply];
+      // 온라인 접수가 아니라 메일 창을 연 경우: 손님이 '보내기'를 눌러야 접수된다는 안내로 바꾼다
+      if (result && result.mode === 'mail') {
+        var config = window.SITE_CONFIG || {};
+        done.querySelector('h2').textContent = '메일 앱에서 전송을 완료해 주세요';
+        done.querySelector('p').innerHTML = '견적 내용과 접수번호가 담긴 메일 창이 열렸습니다. <b>보내기</b>를 눌러야 접수가 완료됩니다.' +
+          (payload.attachments.length ? '<br>첨부하신 사진·도면은 그 메일에 직접 첨부해 주세요.' : '') +
+          '<br>메일 앱이 열리지 않으면 ' + (config.phone || '') + '으로 전화 주세요.';
+      }
       done.hidden = false;
       var top = done.getBoundingClientRect().top + window.scrollY - 120;
       window.scrollTo({ top: top });
