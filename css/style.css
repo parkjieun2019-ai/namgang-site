@@ -7,7 +7,9 @@
   --charcoal-2: #262626;
   --ink: #1f1f1f;
   --text: #333;
-  --muted: #777;
+  --muted: #666;           /* 흰 바탕 대비 5.7:1 */
+  --accent-text: #8f5e10;  /* 글씨용 골드브라운 (흰 바탕 대비 5.5:1) */
+  --en-light: #858585;     /* 영문 얇은 제목 */
   --line: #e4e2dd;
   --gray-bg: #f3f2ef;
   --white: #fff;
@@ -873,4 +875,48 @@ main section[id] { scroll-margin-top: 130px; }
   .float-btns { right: 14px; bottom: 16px; }
   .float-btn { width: 50px; height: 50px; }
   .qform-actions, .qform-actions .btn { width: 100%; }
+}
+
+/* ==========================================================================
+   타이포그래피 다듬기 — 가독성과 고급스러운 인상
+   (앞의 규칙보다 뒤에 두어 덮어쓴다)
+   ========================================================================== */
+body { letter-spacing: -0.01em; }
+h1, h2, h3, h4 { line-height: 1.35; letter-spacing: -0.02em; }
+
+/* 제목 굵기: 800 → 700 */
+.sub-title, .h-title, .wz-panel h2, .wz-done h2, .type-card h3, .job-card h3,
+.step-row h3, .doc h2, .trio-card h3 { font-weight: 700; }
+.hero-title b, .sec-head .en b, .eco .en b, .quick-info .en b, .cta-band .en b,
+.process-item .step-no, .step-row .step-no, .info-card .num, .timeline .year { font-weight: 700; }
+.sub-title { letter-spacing: -0.03em; }
+.h-title { line-height: 1.35; }
+.info-card h3, .type-card h3, .job-card h3, .trio-card h3 { line-height: 1.4; }
+.doc h2 { line-height: 1.5; }
+
+/* 영문 얇은 제목 */
+.sec-head .en { color: var(--en-light); }
+
+/* 설명 문단: 조금 크게, 줄 간격 여유 있게 */
+.sec-head p { line-height: 1.7; }
+.product-card p, .trio-card p, .type-card p, .info-card p, .job-card p,
+.faq-list .answer, .feature-list span, .wz-lead, .quick-info p { font-size: 16px; line-height: 1.75; }
+.flow span, .table-note, .aside-tip ul { font-size: 15px; line-height: 1.7; }
+.prose { max-width: 36em; }
+.doc p, .doc li { word-break: keep-all; }
+
+/* 작은 글씨 하한 */
+.choice-card .desc, .channel span span, .wz-label small, .qfield label { font-size: 14px; }
+.work-card .tag, .tags span, .job-card .tag { font-size: 13px; }
+.process-item h3 small { font-size: 12px; }
+.footer-copy { font-size: 13px; }
+
+/* 금색 글씨는 읽기 좋은 골드브라운으로 (버튼·배경 색은 그대로) */
+.eyebrow-sm, .wz-label em, .faq-list summary .q, .loc-info dt, .spec-table .em,
+.timeline ul b, .flow li::before, .job-card .tag, .tags span, .work-card .tag { color: var(--accent-text); }
+
+@media (max-width: 560px) {
+  .info-table dt { color: var(--accent-text); }
+  .product-card p, .trio-card p, .type-card p, .info-card p, .job-card p,
+  .faq-list .answer, .feature-list span { font-size: 15px; }
 }
