@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>관리자 | 주식회사 남강포장</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='10' fill='%231b1b1b'/%3E%3Cg fill='none' stroke-linejoin='round' stroke-linecap='round' transform='translate(4.8 4.8) scale(.8)'%3E%3Cpath d='M24 4 43 15v19L24 45 5 34V15zM5 15l19 11 19-11M24 26v19' stroke='%23fff' stroke-width='2.6'/%3E%3Cpath d='M14.5 9.5 33.5 20.5v4.5' stroke='%23f2b233' stroke-width='4.4'/%3E%3C/g%3E%3C/svg%3E">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="admin.css?v=1">
+</head>
+<body>
+
+  <!-- 로그인 -->
+  <section class="login" id="loginView" hidden>
+    <form class="login-card" id="loginForm" novalidate>
+      <div class="brand">
+        <svg viewBox="0 0 48 48" fill="none" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M24 4 43 15v19L24 45 5 34V15zM5 15l19 11 19-11M24 26v19" stroke="currentColor" stroke-width="2.4"/><path d="M14.5 9.5 33.5 20.5v4.5" stroke="#f2b233" stroke-width="4"/></svg>
+        <strong>남강포장 관리자</strong>
+      </div>
+      <label class="field">이메일<input type="email" id="loginEmail" autocomplete="username"></label>
+      <label class="field">비밀번호<input type="password" id="loginPw" autocomplete="current-password"></label>
+      <p class="err" id="loginErr" role="alert"></p>
+      <button class="btn primary block" type="submit" id="loginBtn">로그인</button>
+    </form>
+  </section>
+
+  <!-- 관리 화면 -->
+  <div class="shell" id="shellView" hidden>
+    <header class="topbar">
+      <div class="brand">
+        <svg viewBox="0 0 48 48" fill="none" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M24 4 43 15v19L24 45 5 34V15zM5 15l19 11 19-11M24 26v19" stroke="currentColor" stroke-width="2.4"/><path d="M14.5 9.5 33.5 20.5v4.5" stroke="#f2b233" stroke-width="4"/></svg>
+        <strong>남강포장 관리자</strong>
+        <span class="mode" id="modeBadge"></span>
+      </div>
+      <div class="top-actions">
+        <a class="btn ghost" href="../" target="_blank" rel="noopener">사이트 보기 ↗</a>
+        <button class="btn ghost" type="button" id="logoutBtn">로그아웃</button>
+      </div>
+    </header>
+
+    <p class="demo-banner" id="demoBanner" hidden>
+      <b>데모 모드</b> Supabase를 연결하기 전이라 샘플 데이터가 보이고, 여기서 바꾼 내용은 저장되지 않아요. 사진 보정 기능은 그대로 써볼 수 있어요.
+    </p>
+
+    <nav class="tabs" role="tablist" aria-label="관리 메뉴">
+      <button type="button" role="tab" class="tab" data-tab="quotes" aria-selected="true">견적 문의함 <span class="badge" id="newBadge" hidden></span></button>
+      <button type="button" role="tab" class="tab" data-tab="photos" aria-selected="false">사진 관리</button>
+      <button type="button" role="tab" class="tab" data-tab="works" aria-selected="false">납품 사례</button>
+      <button type="button" role="tab" class="tab" data-tab="settings" aria-selected="false">연락처</button>
+    </nav>
+
+    <main class="content">
+      <!-- 견적 문의함 -->
+      <section class="panel" data-panel="quotes" role="tabpanel">
+        <div class="q-layout">
+          <div class="q-list-wrap">
+            <div class="filters" role="group" aria-label="상태로 보기">
+              <button type="button" class="chip is-on" data-filter="all">전체</button>
+              <button type="button" class="chip" data-filter="new">새 문의</button>
+              <button type="button" class="chip" data-filter="contacted">연락함</button>
+              <button type="button" class="chip" data-filter="done">완료</button>
+            </div>
+            <ul class="q-list" id="quoteList"></ul>
+          </div>
+          <div class="q-detail" id="quoteDetail"><p class="empty">왼쪽 목록에서 문의를 선택하세요.</p></div>
+        </div>
+      </section>
+
+      <!-- 사진 관리 -->
+      <section class="panel" data-panel="photos" role="tabpanel" hidden>
+        <p class="panel-lead">사진을 올리면 자리에 맞게 자르고 밝기·색감을 자동으로 맞춰요. 올리기 전에 미리보기에서 위치와 톤을 조정할 수 있어요.</p>
+        <div id="slotGroups"></div>
+      </section>
+
+      <!-- 납품 사례 -->
+      <section class="panel" data-panel="works" role="tabpanel" hidden>
+        <div class="panel-head">
+          <p class="panel-lead">공개된 사례 중 위에서부터 4개가 메인과 설비·공정 페이지에 보여요.</p>
+          <button type="button" class="btn primary" id="addWorkBtn">+ 사례 추가</button>
+        </div>
+        <ul class="work-list" id="workList"></ul>
+      </section>
+
+      <!-- 연락처 -->
+      <section class="panel" data-panel="settings" role="tabpanel" hidden>
+        <form class="settings" id="settingsForm" novalidate>
+          <p class="panel-lead">여기서 바꾼 연락처는 사이트의 모든 전화·이메일·카카오톡 버튼에 반영돼요.</p>
+          <label class="field">대표 전화<input type="tel" id="setPhone" placeholder="031-611-8366"><span class="err" data-err="phone"></span></label>
+          <label class="field">팩스<input type="tel" id="setFax" placeholder="031-611-8367"></label>
+          <label class="field">이메일<input type="email" id="setEmail" placeholder="may212@daum.net"><span class="err" data-err="email"></span></label>
+          <label class="field">카카오톡 채널 주소 <small>비워두면 카톡 버튼이 숨겨져요</small><input type="url" id="setKakao" placeholder="https://pf.kakao.com/_xxxxx/chat"><span class="err" data-err="kakao"></span></label>
+          <button type="submit" class="btn primary">저장</button>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <!-- 사진 편집 창 -->
+  <dialog class="editor" id="editor" aria-labelledby="editorTitle">
+    <form method="dialog" class="editor-inner" id="editorForm">
+      <header class="editor-head">
+        <div><h2 id="editorTitle">사진 바꾸기</h2><p class="editor-sub" id="editorSub"></p></div>
+        <button type="button" class="icon-btn" id="editorClose" aria-label="닫기">×</button>
+      </header>
+
+      <div class="editor-body">
+        <div class="pick" id="pickArea">
+          <label class="dropzone" for="editorFile">
+            <input type="file" id="editorFile" accept="image/*">
+            <strong>사진을 선택하거나 끌어다 놓으세요</strong>
+            <span>휴대폰 원본 그대로 올려도 돼요. 크기·회전·밝기는 자동으로 맞춰요.</span>
+          </label>
+        </div>
+
+        <div class="compare" id="compareArea" hidden>
+          <figure><figcaption>올린 사진</figcaption><canvas id="beforeCanvas"></canvas></figure>
+          <figure><figcaption>사이트에 올라갈 모습 <small>드래그로 위치 조정</small></figcaption><canvas id="afterCanvas" tabindex="0" aria-label="자르기 위치 조정 미리보기"></canvas></figure>
+        </div>
+
+        <div class="controls" id="controlsArea" hidden>
+          <label class="range">확대 <input type="range" id="zoomRange" min="1" max="3" step="0.01" value="1"><output id="zoomOut">1.0×</output></label>
+          <label class="range">톤 강도 <input type="range" id="toneRange" min="0" max="100" step="1" value="60"><output id="toneOut">60%</output></label>
+          <p class="steps" id="stepInfo"></p>
+        </div>
+
+        <div class="work-fields" id="workFields" hidden>
+          <label class="field">제목<input type="text" id="workTitle" placeholder="농산물 선물 박스"><span class="err" data-err="title"></span></label>
+          <label class="field">업종<input type="text" id="workIndustry" placeholder="식품·농산물"></label>
+          <label class="field">설명 <small>선택</small><textarea id="workDesc" rows="2" placeholder="사과 5kg 선물세트용 뚜껑 일체형 박스"></textarea></label>
+          <label class="check"><input type="checkbox" id="workPublished" checked> 사이트에 공개</label>
+        </div>
+      </div>
+
+      <footer class="editor-foot">
+        <button type="button" class="btn ghost" id="editorReset" hidden>다른 사진 선택</button>
+        <span class="spacer"></span>
+        <button type="button" class="btn ghost" id="editorCancel">취소</button>
+        <button type="button" class="btn primary" id="editorApply" disabled>사이트에 반영</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="../js/config.js?v=1"></script>
+  <script src="../js/slots.js?v=1"></script>
+  <script src="image-pipeline.js?v=1"></script>
+  <script src="admin.js?v=1"></script>
+</body>
+</html>

@@ -326,6 +326,8 @@
       });
   }
   window.submitQuote = submitQuote;
+  // site-data.js(관리자에서 바꾼 내용 반영)가 쓰는 공용 함수
+  window.NamgangSite = { applyContacts: applyContacts, loadSupabase: loadSupabase };
 
   document.addEventListener('DOMContentLoaded', function () {
     applyContacts();
