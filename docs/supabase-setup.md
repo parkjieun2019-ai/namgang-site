@@ -38,7 +38,14 @@ Supabase는 견적 문의와 첨부 사진, 사이트 사진을 저장하는 무
 
 1. **Authentication** → **Users** → **Add user** → **Create new user**
 2. 관리자로 쓸 이메일과 비밀번호 입력, **Auto Confirm User** 체크 → **Create user**
-3. 이 이메일·비밀번호로 나중에 관리자 페이지에 로그인합니다. (비밀번호는 Claude에게 보내지 마세요)
+3. **관리자 명단에 등록**: **SQL Editor**에서 아래 두 줄의 이메일을 방금 만든 주소로 바꿔 실행합니다.
+   ```sql
+   insert into public.admin_users (email) values ('관리자이메일@example.com')
+   on conflict (email) do nothing;
+   ```
+   명단에 없는 계정은 로그인해도 아무것도 볼 수 없습니다. (회원가입이 실수로 켜져도 손님 정보가 안전한 이유)
+4. 이 이메일·비밀번호로 관리자 페이지에 로그인합니다. (비밀번호는 Claude에게 보내지 마세요)
+5. 담당자가 바뀌면: Users에서 계정 삭제 + `delete from public.admin_users where email = '...';`
 
 ## 5. 홈페이지에 연결하기
 

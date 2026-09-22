@@ -60,6 +60,20 @@
   }
   function check(res) { if (res.error) throw res.error; return res.data; }
 
+  // 로그인한 계정이 관리자 명단(admin_users)에 있는지 확인. 없으면 로그아웃
+  function verifyAdmin() {
+    return sb.rpc('is_admin').then(function (res) {
+      if (res.error) throw res.error;
+      if (res.data === true) return;
+      return sb.auth.signOut().then(function () {
+        var err = new Error('관리자로 등록되지 않은 계정');
+        err.notAdmin = true;
+        throw err;
+      });
+    });
+  }
+  var NOT_ADMIN_MSG = '관리자로 등록되지 않은 계정이에요. 시스템 관리자에게 등록을 요청하세요.';
+
   /* ---------- 데모 데이터 (예시임을 이름에 표시) ---------- */
   function loadDemo() {
     var now = Date.now();
@@ -131,10 +145,11 @@
     btn.disabled = true; btn.textContent = '로그인 중…'; errEl.textContent = '';
     sb.auth.signInWithPassword({ email: email, password: pw }).then(function (res) {
       if (res.error) throw res.error;
-      return loadAll().then(showShell);
+      return verifyAdmin().then(loadAll).then(showShell);
     }).catch(function (err) {
       console.warn(err);
-      errEl.textContent = /invalid/i.test(err.message || '') ? '이메일 또는 비밀번호가 맞지 않아요.' : '로그인하지 못했어요. 잠시 후 다시 시도해 주세요.';
+      errEl.textContent = err.notAdmin ? NOT_ADMIN_MSG
+        : /invalid/i.test(err.message || '') ? '이메일 또는 비밀번호가 맞지 않아요.' : '로그인하지 못했어요. 잠시 후 다시 시도해 주세요.';
     }).then(function () { btn.disabled = false; btn.textContent = '로그인'; });
   });
   $('#logoutBtn').addEventListener('click', function () {
@@ -530,11 +545,11 @@
   /* ---------- 시작 ---------- */
   if (DEMO) { loadDemo(); showShell(); return; }
   loadSupabase().then(function () { return sb.auth.getSession(); }).then(function (res) {
-    if (res.data && res.data.session) return loadAll().then(showShell);
+    if (res.data && res.data.session) return verifyAdmin().then(loadAll).then(showShell);
     showLogin();
   }).catch(function (err) {
     console.error(err);
     showLogin();
-    $('#loginErr').textContent = '관리자 서버에 연결하지 못했어요. 잠시 후 새로고침해 주세요.';
+    $('#loginErr').textContent = err.notAdmin ? NOT_ADMIN_MSG : '관리자 서버에 연결하지 못했어요. 잠시 후 새로고침해 주세요.';
   });
 })();
