@@ -14,6 +14,7 @@
 create table if not exists public.admin_users (
   email      text primary key,
   role       text not null default 'staff' check (role in ('owner', 'staff')),  -- owner: 담당자 삭제·비밀번호 재설정 가능
+  notify     boolean not null default false,  -- 새 견적 알림 메일 받기
   created_at timestamptz not null default now()
 );
 -- 정책을 만들지 않으므로 사이트·API로는 명단을 읽거나 바꿀 수 없음 (대시보드에서만 관리)
@@ -167,3 +168,32 @@ create policy "site_images_admin_write" on storage.objects
 -- 관리자 삭제:  delete from public.admin_users where email = '관리자이메일@example.com';
 -- 이후 담당자 추가·삭제는 관리자 페이지 > 담당자 메뉴에서 (삭제·비밀번호 재설정은 role = 'owner'만 가능)
 -- 관리자 목록:  select * from public.admin_users;
+
+-- 8. 새 견적 알림 메일 ----------------------------------------------------------
+-- 새 문의가 저장되면 Edge Function "notify-quote" 를 호출해 알림 받기(notify)가 켜진 관리자에게 메일을 보낸다.
+alter table public.quotes add column if not exists notified_at timestamptz;
+drop policy if exists "quotes_insert_public" on public.quotes;
+create policy "quotes_insert_public" on public.quotes
+  for insert to anon, authenticated
+  with check (status = 'new' and admin_memo is null and notified_at is null);
+
+alter table public.admin_users add column if not exists notify boolean not null default false;
+update public.admin_users set notify = true where email = 'may212@daum.net';
+
+create extension if not exists pg_net with schema extensions;
+
+create or replace function public.notify_new_quote()
+returns trigger language plpgsql security definer set search_path = public as $$
+begin
+  -- 공개용 anon 키로 호출 (함수 쪽에서 한 문의당 한 번만 보내도록 막음)
+  perform net.http_post(
+    url := 'https://ieowqffzcrggkntmfeik.supabase.co/functions/v1/notify-quote',
+    body := jsonb_build_object('id', new.id),
+    headers := jsonb_build_object('Content-Type', 'application/json', 'Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imllb3dxZmZ6Y3JnZ2tudG1mZWlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAwNjI2MzcsImV4cCI6MjEwNTYzODYzN30.SaK02GX4u2OKF09LvTRDzIqsT9Jj7PglWcW8VD9QDXw')
+  );
+  return new;
+end $$;
+
+drop trigger if exists quotes_notify on public.quotes;
+create trigger quotes_notify after insert on public.quotes
+  for each row execute function public.notify_new_quote();

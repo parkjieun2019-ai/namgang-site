@@ -59,7 +59,7 @@ Deno.serve(async (req) => {
 
   try {
     if (action === 'list') {
-      const { data: rows, error } = await db.from('admin_users').select('email, role, created_at').order('created_at');
+      const { data: rows, error } = await db.from('admin_users').select('email, role, notify, created_at').order('created_at');
       if (error) throw error;
       const { data: users, error: uErr } = await db.auth.admin.listUsers({ page: 1, perPage: 1000 });
       if (uErr) throw uErr;
@@ -69,7 +69,7 @@ Deno.serve(async (req) => {
         my_role: (rows ?? []).find((r) => r.email.toLowerCase() === myEmail)?.role ?? 'staff',
         admins: (rows ?? []).map((r) => {
           const u = byEmail.get(r.email.toLowerCase());
-          return { email: r.email, role: r.role, added_at: r.created_at, has_account: !!u, last_sign_in_at: u?.last_sign_in_at ?? null };
+          return { email: r.email, role: r.role, notify: !!r.notify, added_at: r.created_at, has_account: !!u, last_sign_in_at: u?.last_sign_in_at ?? null };
         }),
       });
     }
@@ -104,6 +104,15 @@ Deno.serve(async (req) => {
         const { error } = await db.auth.admin.updateUserById(user.id, { password });
         if (error) throw error;
       }
+      return reply(200, { ok: true });
+    }
+
+    if (action === 'notify') {
+      // 새 문의 알림 받기 켜기/끄기 — 본인 것은 누구나, 다른 사람 것은 최고 관리자만
+      if (email !== myEmail && (await roleOf(myEmail)) !== 'owner') return reply(403, { error: OWNER_ONLY });
+      if (!(await roleOf(email))) return reply(400, { error: '관리자 명단에 없는 이메일이에요.' });
+      const { error } = await db.from('admin_users').update({ notify: String(body.on) === 'true' }).eq('email', email);
+      if (error) throw error;
       return reply(200, { ok: true });
     }
 
