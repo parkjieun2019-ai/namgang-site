@@ -1,20 +1,32 @@
-# 데모 이미지 출처
+# 사이트 사진 출처
 
-데모에 쓴 사진은 모두 [Unsplash](https://unsplash.com/license)의 무료 이미지입니다. Unsplash 라이선스는 상업적 사용을 허용하고, 출처 표기가 필수는 아닙니다.
-실제 공장 사진이 준비되면 관리자 페이지에서 교체하세요.
+## 실제 사진 (2026-09-23 적용)
+남강포장에서 직접 촬영한 사진입니다. 보정한 파일은 `images/photos/`, 원본은 `사진원본/`에 있습니다.
+보정 내용: 휴대폰 회전 보정 → 지저분한 영역 크롭 → 자동 밝기·대비(레벨)·색 틀어짐 보정 → 자리별 비율로 저장(JPEG).
 
-| 위치 | Unsplash 사진 ID | 내용 |
-|---|---|---|
-| 히어로 01 원단 | photo-1786540479491-c5c210e57945 | 겹겹이 쌓인 골판지 |
-| 히어로 02 인쇄 | photo-1758183961426-88d64eb5f787 | 산업용 인쇄기 |
-| 히어로 03 재단 | photo-1729944950511-e9c71556cfd4 | 넓은 공장의 대형 설비 |
-| 히어로 04 접착·제함 | photo-1693031630157-7ecc8d06de63 | 컨베이어 라인 |
-| 히어로 05 출고 | photo-1645736315000-6f788915923b | 창고와 지게차 |
-| 제품 CARTON BOX | photo-1577705998148-6da4f3963bc8 | 골판지 박스 |
-| 제품 PRINTED BOX | photo-1766040923580-16ad32fae8b4 | 쌓인 박스 |
-| 공정 01~05 | photo-1696764190824-bcdb5c8278d3, photo-1503694978374-8a2fa686963a, photo-1727517786578-ff2bb896b852, photo-1693031630189-a39e6d70bf22, photo-1532635026-d12867005472 | 원단·인쇄기·설비·지게차 |
-| 3단 카드 | photo-1496247749665-49cf5b1022e9, photo-1582668155461-b6c27ceca8c3, photo-1700165644892-3dd6b67b25bc | 공장·종이 섬유·박스 |
-| 납품 사례 | photo-1709804945989-c8be542e04db, photo-1573376671096-e1fce2d1f19d, photo-1630448927918-1dbcd8ba439b, photo-1701849473471-666bf2b0158e | 박스·창고 |
-| 제품소개 6종 | photo-1577705998148-6da4f3963bc8, photo-1656543802898-41c8c46683a7, photo-1595246135406-803418233494, photo-1626253934161-08cfea22e968, photo-1595246007497-15e0ed4b8d96, photo-1764764138587-189f22804ec4 | 일반형·조립형·뚜껑 일체형·손잡이형·장형·싸개형 |
-| 친환경 배경 | photo-1673788458533-41fb77e6b06e | 골판지 패턴 |
-| 견적문의 박스 종류 카드 | photo-1573376671096-e1fce2d1f19d, photo-1630448927918-1dbcd8ba439b, photo-1766040923580-16ad32fae8b4, photo-1701849473471-666bf2b0158e | 택배·유통 / 농산물·식품 / 인쇄 / 맞춤·특수 |
+| 자리 | 파일 |
+|---|---|
+| 메인 히어로 01~05 | hero-01-sheet, hero-02-print, hero-03-die, hero-04-glue, hero-05-ship |
+| 상단 비주얼 | visual-exterior(공장 외관), visual-warehouse(창고), visual-press(인쇄기) |
+| 공정 01~05 | proc-01-sheet ~ proc-05-ship |
+| 설비 | equip-press, equip-die, equip-glue, equip-forklift, equip-plate(인쇄판), equip-die-rack(목형) |
+| 제품 | product-carton, product-printed, product-kraft, product-long |
+| 납품 사례 | work-food, work-export, work-marine, work-stock |
+| 견적문의 카드 | thumb-delivery, thumb-food, thumb-printed, thumb-custom |
+| 창고·적재 | warehouse-wide, stock-pallets, stock-mixed |
+
+메모
+- 거래처 상표(Caterpillar, FURUNO, 대한궁 등)가 보이는 사진은 납품 사례로 사용 중입니다. 거래처가 원치 않으면 교체하거나 상표 부분을 가려야 합니다.
+- 직원 얼굴이 보이는 사진(사진원본 8.jpg, 10.jpg)은 동의 확인 전까지 사용하지 않았습니다.
+- 원본 해상도가 약 1400px이라 큰 화면에서는 약간 부드럽게 보일 수 있습니다. 더 큰 원본이 있으면 다시 보정해 교체하면 좋습니다.
+
+## 무료 이미지 (아직 남아 있는 곳)
+[Unsplash](https://unsplash.com/license) 무료 이미지입니다. 상업적 사용이 허용되고 출처 표기는 필수가 아닙니다.
+
+| 위치 | Unsplash 사진 ID |
+|---|---|
+| 제품소개 뚜껑 일체형 | photo-1595246135406-803418233494 |
+| 제품소개 손잡이형 | photo-1626253934161-08cfea22e968 |
+| 제품소개 싸개형 | photo-1764764138587-189f22804ec4 |
+
+이 세 가지 형태의 실제 사진이 준비되면 교체하세요.
