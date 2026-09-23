@@ -5,12 +5,12 @@
 <title>주식회사 남강포장 회사소개서</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
   :root{
-    --yellow:#F2B233; --gold:#C78A12; --ink:#1F1F1F; --ink2:#3A3A3A;
-    --gray:#767676; --line:#E2E2E2; --bg:#F6F5F3;
+    --yellow:#F2B233; --gold:#B8810F; --ink:#191919; --ink2:#454545;
+    --gray:#8A8580; --line:#DCD7D0; --paper:#F7F4EF;
     --ko:'Pretendard Variable','Pretendard','맑은 고딕','Malgun Gothic',sans-serif;
     --en:'Montserrat',var(--ko);
   }
@@ -18,432 +18,485 @@
   html,body{margin:0;padding:0}
   body{font-family:var(--ko);color:var(--ink);-webkit-print-color-adjust:exact;print-color-adjust:exact}
   @page{size:A4 portrait;margin:0}
-  .page{
-    width:210mm;height:297mm;padding:18mm 16mm;position:relative;overflow:hidden;
-    page-break-after:always;background:#fff;display:flex;flex-direction:column;
-  }
+
+  .page{width:210mm;height:297mm;position:relative;overflow:hidden;
+        page-break-after:always;background:#fff}
   .page:last-child{page-break-after:auto}
+  .pad{position:absolute;inset:0;padding:22mm 20mm}
+  .paper{background:var(--paper)}
+  .dark{background:var(--ink);color:#fff}
 
-  /* 머리말 */
-  .ph{display:flex;align-items:flex-end;justify-content:space-between;
-      border-bottom:2px solid var(--ink);padding-bottom:4mm;margin-bottom:8mm}
-  .ph h2{margin:0;font-size:19pt;letter-spacing:-.02em}
-  .ph .en{font-family:var(--en);font-size:8.5pt;font-weight:600;letter-spacing:.18em;color:var(--gold)}
-  .ph small{font-size:8.5pt;color:var(--gray)}
+  /* 전면 사진 */
+  .bleed{position:absolute;inset:0}
+  .bleed img{width:100%;height:100%;object-fit:cover;display:block}
+  .veil{position:absolute;inset:0;background:rgba(20,20,20,.46)}
+  .veil-b{position:absolute;left:0;right:0;bottom:0;height:46%;background:rgba(20,20,20,.55)}
 
-  /* 쪽번호 */
-  .pn{position:absolute;left:16mm;right:16mm;bottom:10mm;display:flex;
-      justify-content:space-between;font-size:8pt;color:var(--gray);
-      font-family:var(--en);letter-spacing:.08em}
+  /* 잡지식 표제 */
+  .kicker{font-family:var(--en);font-size:8pt;font-weight:600;letter-spacing:.34em;
+          text-transform:uppercase;color:var(--gold)}
+  .kicker.on-dark{color:var(--yellow)}
+  .display{font-family:var(--en);font-weight:200;font-size:44pt;line-height:1.02;
+           letter-spacing:-.02em;margin:5mm 0 0}
+  .display b{font-weight:700;display:block}
+  .title-ko{font-size:21pt;font-weight:700;letter-spacing:-.035em;margin:4mm 0 0}
+  .rule{height:1px;background:var(--line);margin:7mm 0}
+  .rule.dark{background:#3E3E3E}
 
-  /* 표지 */
-  .cover{background:var(--ink);color:#fff;padding:0;display:block}
-  .cover .top{padding:20mm 16mm 0}
-  .cover .mark{display:flex;align-items:center;gap:3.5mm}
-  .cover .mark svg{width:13mm;height:13mm}
-  .cover .mark b{font-size:15pt;letter-spacing:-.02em}
-  .cover .mark b i{color:var(--yellow);font-style:normal}
-  .cover .mark span{display:block;font-family:var(--en);font-size:7.5pt;
-                    letter-spacing:.14em;color:#B9B9B9;font-weight:500}
-  .cover h1{font-family:var(--en);font-size:40pt;font-weight:300;line-height:1.08;
-            margin:26mm 0 0;letter-spacing:-.01em}
-  .cover h1 b{font-weight:800;display:block}
-  .cover .kr{margin:6mm 0 0;font-size:13pt;font-weight:600;letter-spacing:-.02em}
-  .cover .sl{margin:3mm 0 0;font-size:10pt;color:#C9C9C9;line-height:1.7}
-  /* 인쇄용 PDF에서 그라데이션은 색이 깨지므로 쓰지 않는다 */
-  .cover .shot{position:absolute;left:0;right:0;bottom:32mm;height:92mm;
-               border-top:1.2mm solid var(--yellow)}
-  .cover .shot img{width:100%;height:100%;object-fit:cover;object-position:60% 55%}
-  .cover .foot{position:absolute;left:16mm;right:16mm;bottom:12mm;
-    display:flex;justify-content:space-between;align-items:flex-end;
-    font-size:8.5pt;color:#C9C9C9;line-height:1.8}
-  .cover .foot b{color:#fff;font-size:10pt}
+  /* 쪽번호 — 큼직하게 */
+  .folio{position:absolute;left:20mm;bottom:13mm;font-family:var(--en);
+         font-size:26pt;font-weight:200;color:var(--line);line-height:1}
+  .folio.on-dark{color:#4A4A4A}
+  .runner{position:absolute;right:20mm;bottom:15mm;font-family:var(--en);font-size:7.5pt;
+          letter-spacing:.24em;color:var(--gray);text-transform:uppercase}
 
-  /* 인사말 */
-  .greet{display:grid;grid-template-columns:1fr 62mm;gap:10mm;align-items:start}
-  .greet p{font-size:10pt;line-height:2;margin:0 0 4.5mm;color:var(--ink2)}
-  .greet .lead{font-size:13pt;font-weight:700;line-height:1.65;color:var(--ink);margin-bottom:7mm;letter-spacing:-.02em}
-  .greet figure{margin:0}
-  .greet figure img{width:100%;height:96mm;object-fit:cover;display:block}
-  .band{margin:9mm 0 0;height:46mm;overflow:hidden}
-  .band img{width:100%;height:100%;object-fit:cover;object-position:50% 58%;display:block}
-  .sign{margin-top:7mm;text-align:right}
-  .sign small{display:block;font-size:9pt;color:var(--gray);margin-bottom:1mm}
-  .sign img{height:17mm}
+  p{margin:0 0 4mm}
+  .body{font-size:9.6pt;line-height:2.05;color:var(--ink2)}
+  .body.two{column-count:2;column-gap:10mm}
+  .lead{font-size:14pt;line-height:1.72;font-weight:700;letter-spacing:-.03em;color:var(--ink)}
 
-  .promise{display:grid;grid-template-columns:repeat(3,1fr);gap:5mm;margin-top:auto}
-  .promise div{border-top:2px solid var(--yellow);padding-top:4mm}
-  .promise b{display:block;font-size:10.5pt;margin-bottom:2mm}
-  .promise p{margin:0;font-size:8.5pt;line-height:1.75;color:var(--gray)}
+  /* ── 표지 ── */
+  .cover .mast{position:absolute;top:20mm;left:20mm;right:20mm;
+               display:flex;align-items:center;justify-content:space-between;color:#fff}
+  .cover .mast .lg{display:flex;align-items:center;gap:3.5mm}
+  .cover .mast svg{width:12mm;height:12mm}
+  .cover .mast b{font-size:13.5pt;letter-spacing:-.03em;display:block}
+  .cover .mast b i{color:var(--yellow);font-style:normal}
+  .cover .mast span{font-family:var(--en);font-size:6.8pt;letter-spacing:.2em;color:#CFCAC2;display:block}
+  .cover .mast .yr{font-family:var(--en);font-size:8pt;letter-spacing:.24em;color:#CFCAC2}
+  .cover .ttl{position:absolute;left:20mm;right:20mm;bottom:52mm;color:#fff}
+  .cover .ttl .display{font-size:52pt}
+  .cover .ttl p{margin:6mm 0 0;font-size:11pt;color:#E3DFD8;line-height:1.8;letter-spacing:-.02em}
+  .cover .bar{position:absolute;left:0;right:0;bottom:0;height:34mm;background:var(--ink);
+              padding:0 20mm;display:flex;align-items:center;justify-content:space-between;
+              color:#B5B0A8;font-size:8.4pt;line-height:1.75}
+  .cover .bar b{color:#fff;font-size:9.6pt;display:block;letter-spacing:-.02em}
+  .cover .bar .r{text-align:right;font-family:var(--en);letter-spacing:.06em}
 
-  /* 정보 표 */
-  .info{width:100%;border-collapse:collapse;font-size:9.5pt}
-  .info th,.info td{border-bottom:1px solid var(--line);padding:3.2mm 2mm;text-align:left;vertical-align:top}
-  .info th{width:32mm;color:var(--gray);font-weight:600;background:#FAFAF9}
-  .info tr:first-child th,.info tr:first-child td{border-top:1px solid var(--ink)}
+  /* ── 목차 ── */
+  .toc{list-style:none;margin:0;padding:0}
+  .toc li{display:flex;align-items:baseline;gap:7mm;padding:5.2mm 0;border-bottom:1px solid var(--line)}
+  .toc .n{font-family:var(--en);font-size:11pt;font-weight:600;color:var(--yellow);width:11mm;flex:none}
+  .toc .t{font-size:12.5pt;font-weight:700;letter-spacing:-.03em;flex:1}
+  .toc .e{font-family:var(--en);font-size:7.6pt;letter-spacing:.2em;color:var(--gray);
+          text-transform:uppercase}
 
-  /* 연혁 */
-  .hist{margin-top:8mm}
-  .hist ol{list-style:none;margin:0;padding:0;border-left:2px solid var(--line);padding-left:7mm}
-  .hist li{position:relative;margin-bottom:3.6mm;font-size:9pt;line-height:1.5;display:flex;gap:4mm}
-  .hist li::before{content:'';position:absolute;left:-8.1mm;top:1.6mm;width:2.6mm;height:2.6mm;
-                   border-radius:50%;background:var(--line)}
-  .hist li.key::before{background:var(--yellow);width:3.4mm;height:3.4mm;left:-8.5mm}
-  .hist li.key b{color:var(--ink)}
-  .hist time{font-family:var(--en);font-weight:700;font-size:9pt;color:var(--gold);width:19mm;flex:none}
-  .hist b{font-weight:500;color:var(--ink2)}
+  /* ── 인사말 ── */
+  .quote{font-size:18pt;line-height:1.62;font-weight:700;letter-spacing:-.04em;margin:0 0 9mm}
+  .quote em{font-style:normal;color:var(--gold)}
+  .sign{margin-top:8mm;display:flex;align-items:flex-end;gap:5mm;justify-content:flex-end}
+  .sign small{font-size:8.6pt;color:var(--gray)}
+  .sign img{height:19mm}
 
-  /* 설비 표 */
-  .spec{width:100%;border-collapse:collapse;font-size:9pt;margin-top:2mm}
-  .spec th{background:var(--ink);color:#fff;padding:3mm 2.5mm;text-align:left;font-weight:600;font-size:8.5pt}
-  .spec td{border-bottom:1px solid var(--line);padding:3.2mm 2.5mm;vertical-align:top;line-height:1.55}
-  .spec tbody tr:nth-child(odd){background:#FBFAF8}
-  .spec td:first-child{font-weight:600;width:34mm}
-  .spec .c{color:var(--gray)}
+  /* ── 약속 ── */
+  .promise{display:grid;grid-template-columns:repeat(3,1fr);gap:8mm;margin-top:2mm}
+  .promise .pn{font-family:var(--en);font-size:8pt;font-weight:600;letter-spacing:.2em;
+               color:var(--yellow);display:block;margin-bottom:3mm}
+  .promise h4{margin:0 0 2.5mm;font-size:11.5pt;letter-spacing:-.03em}
+  .promise p{margin:0;font-size:8.6pt;line-height:1.85;color:var(--gray)}
 
-  .note{margin-top:5mm;font-size:8.5pt;color:var(--gray);line-height:1.8}
-  .note b{color:var(--ink)}
+  /* ── 데이터(표 대신 편집형) ── */
+  .facts{display:grid;grid-template-columns:1fr 1fr;gap:0 10mm}
+  .facts div{padding:4.2mm 0;border-bottom:1px solid var(--line)}
+  .facts dt{font-family:var(--en);font-size:7.4pt;letter-spacing:.2em;color:var(--gray);
+            text-transform:uppercase;margin-bottom:1.6mm}
+  .facts dd{margin:0;font-size:10pt;line-height:1.6;letter-spacing:-.02em}
 
-  .facts{display:grid;grid-template-columns:repeat(3,1fr);gap:4mm;margin:6mm 0 0}
-  .facts div{background:var(--bg);padding:5mm 4mm}
-  .facts small{display:block;font-family:var(--en);font-size:7.5pt;letter-spacing:.12em;color:var(--gold);font-weight:600}
-  .facts b{display:block;font-size:14pt;margin:1.5mm 0 .5mm;letter-spacing:-.02em}
-  .facts span{font-size:8pt;color:var(--gray)}
+  .bignum{display:grid;grid-template-columns:repeat(3,1fr);gap:8mm;margin-top:9mm}
+  .bignum b{font-family:var(--en);font-size:30pt;font-weight:200;letter-spacing:-.03em;
+            display:block;line-height:1}
+  .bignum b i{font-style:normal;font-size:13pt;font-weight:500}
+  .bignum span{display:block;font-size:8.6pt;color:var(--gray);margin-top:2.5mm;line-height:1.6}
+  .bignum .k{font-family:var(--en);font-size:7pt;letter-spacing:.2em;color:var(--yellow);
+             display:block;margin-bottom:3mm}
 
-  /* 공정 */
-  .steps{display:grid;gap:4mm}
-  .step{display:grid;grid-template-columns:46mm 1fr;gap:6mm;align-items:center}
-  .step img{width:100%;height:27mm;object-fit:cover;display:block}
-  .step .no{font-family:var(--en);font-size:8pt;font-weight:700;color:var(--yellow);letter-spacing:.12em}
-  .step h3{margin:1mm 0 1.5mm;font-size:11.5pt;letter-spacing:-.02em}
-  .step p{margin:0;font-size:8.8pt;line-height:1.75;color:var(--gray)}
+  /* ── 연혁 ── */
+  .hist{list-style:none;margin:0;padding:0}
+  .hist li{display:grid;grid-template-columns:20mm 1fr;gap:6mm;padding:3.4mm 0;
+           border-bottom:1px solid var(--line);font-size:9.4pt;line-height:1.55}
+  .hist time{font-family:var(--en);font-weight:600;font-size:9.6pt;color:var(--ink)}
+  .hist li.key{background:transparent}
+  .hist li.key time{color:var(--gold)}
+  .hist li.key span{font-weight:700}
+  .hist span{color:var(--ink2)}
 
-  /* 제품 */
-  .prods{display:grid;grid-template-columns:repeat(3,1fr);gap:6mm 5mm}
-  .prod img{width:100%;height:36mm;object-fit:contain;background:#fff;display:block;
-            border:1px solid var(--line)}
-  .prod h3{margin:3mm 0 1.5mm;font-size:10.5pt;letter-spacing:-.02em}
-  .prod p{margin:0;font-size:8.3pt;line-height:1.7;color:var(--gray)}
+  /* ── 설비 ── */
+  .eq{list-style:none;margin:0;padding:0}
+  .eq li{display:grid;grid-template-columns:34mm 1fr;gap:7mm;padding:5mm 0;
+         border-bottom:1px solid var(--line)}
+  .eq h4{margin:0;font-size:11pt;letter-spacing:-.03em}
+  .eq h4 small{display:block;font-family:var(--en);font-size:7pt;letter-spacing:.2em;
+               color:var(--gray);margin-top:1.2mm;text-transform:uppercase}
+  .eq p{margin:0;font-size:9.2pt;line-height:1.85;color:var(--ink2)}
 
-  .flute{width:100%;border-collapse:collapse;font-size:9pt;margin-top:3mm}
-  .flute th{background:#FAFAF9;border-bottom:1px solid var(--ink);padding:3mm 2.5mm;text-align:left;font-size:8.5pt}
-  .flute td{border-bottom:1px solid var(--line);padding:3mm 2.5mm;line-height:1.55}
-  .flute td:first-child{font-weight:700}
-  .flute td:nth-child(2){font-family:var(--en);color:var(--gold);font-weight:600}
+  /* ── 공정 ── */
+  .proc{display:grid;grid-template-columns:repeat(2,1fr);gap:8mm 7mm}
+  .proc figure{margin:0}
+  .proc img{width:100%;height:38mm;object-fit:cover;display:block}
+  .proc .n{font-family:var(--en);font-size:7.4pt;letter-spacing:.24em;color:var(--yellow);
+           display:block;margin:3.5mm 0 1.5mm}
+  .proc h4{margin:0 0 1.8mm;font-size:11.5pt;letter-spacing:-.03em}
+  .proc p{margin:0;font-size:8.6pt;line-height:1.8;color:var(--gray)}
 
-  .fields{display:grid;grid-template-columns:repeat(2,1fr);gap:4mm;margin-top:4mm}
-  .fields div{display:flex;gap:4mm;align-items:center;border:1px solid var(--line);padding:3.5mm 4mm}
-  .fields img{width:22mm;height:16mm;object-fit:cover;flex:none}
-  .fields b{display:block;font-size:9.5pt;margin-bottom:1mm}
-  .fields span{font-size:8.2pt;color:var(--gray);line-height:1.6}
+  /* ── 룩북 ── */
+  .look-hero{position:absolute;left:0;right:0;top:0;height:152mm;background:#fff}
+  .look-hero img{width:100%;height:100%;object-fit:contain;display:block}
+  .look-cap{position:absolute;left:20mm;right:20mm;top:158mm}
+  .look-cap h3{margin:0;font-size:19pt;letter-spacing:-.04em}
+  .look-cap .e{font-family:var(--en);font-size:7.4pt;letter-spacing:.24em;color:var(--gold);
+               display:block;margin-bottom:3mm;text-transform:uppercase}
+  .look-cap p{margin:3mm 0 0;font-size:9.6pt;line-height:1.9;color:var(--ink2);max-width:118mm}
 
-  /* 뒷표지 */
-  .back{background:var(--ink);color:#fff;justify-content:center}
-  .back h2{font-family:var(--en);font-size:30pt;font-weight:300;margin:0 0 4mm;line-height:1.15}
-  .back h2 b{font-weight:800}
-  .back .kr{font-size:11pt;color:#C9C9C9;margin:0 0 14mm;line-height:1.9}
-  .back .row{display:grid;grid-template-columns:28mm 1fr;gap:3mm 6mm;font-size:10pt;
-             border-top:1px solid #444;padding-top:6mm}
-  .back .row dt{color:var(--yellow);font-weight:600;font-size:9pt;padding-top:.6mm}
-  .back .row dd{margin:0;line-height:1.7}
-  .back .mark2{margin-top:auto;display:flex;align-items:center;gap:3.5mm;padding-top:16mm}
-  .back .mark2 svg{width:11mm;height:11mm}
-  .back .mark2 b{font-size:12pt}
-  .back .mark2 b i{color:var(--yellow);font-style:normal}
-  .back .mark2 span{display:block;font-family:var(--en);font-size:7pt;letter-spacing:.14em;color:#B9B9B9}
+  .look-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12mm 10mm}
+  .look-grid figure{margin:0}
+  .look-grid img{width:100%;height:60mm;object-fit:contain;display:block;background:#fff}
+  .look-grid .e{font-family:var(--en);font-size:7pt;letter-spacing:.22em;color:var(--gold);
+                display:block;margin:4mm 0 1.5mm}
+  .look-grid h4{margin:0 0 1.5mm;font-size:12pt;letter-spacing:-.03em}
+  .look-grid p{margin:0;font-size:8.6pt;line-height:1.8;color:var(--gray)}
+
+  /* ── 골판지 ── */
+  .flute{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:0 10mm}
+  .flute li{padding:4.4mm 0;border-bottom:1px solid var(--line)}
+  .flute b{font-family:var(--en);font-size:13pt;font-weight:600;letter-spacing:-.02em}
+  .flute em{font-style:normal;font-size:8.6pt;color:var(--gold);margin-left:2.5mm;
+            font-family:var(--en);font-weight:500}
+  .flute p{margin:1.8mm 0 0;font-size:8.6pt;line-height:1.75;color:var(--gray)}
+
+  /* ── 납품 분야 ── */
+  .apps{display:grid;grid-template-columns:repeat(2,1fr);gap:9mm 8mm}
+  .apps figure{margin:0}
+  .apps img{width:100%;height:44mm;object-fit:cover;display:block}
+  .apps h4{margin:3.5mm 0 1.5mm;font-size:11.5pt;letter-spacing:-.03em}
+  .apps p{margin:0;font-size:8.6pt;line-height:1.75;color:var(--gray)}
+
+  /* ── 거래 안내 ── */
+  .terms{list-style:none;margin:0;padding:0}
+  .terms li{display:grid;grid-template-columns:28mm 1fr;gap:6mm;padding:4mm 0;
+            border-bottom:1px solid var(--line);font-size:9.4pt;line-height:1.7}
+  .terms dt{font-family:var(--en);font-size:7.4pt;letter-spacing:.2em;color:var(--gray);
+            text-transform:uppercase;padding-top:1mm}
+  .terms b{font-weight:600;letter-spacing:-.02em}
+
+  /* ── 주요 납품처 (직접 전달용 판에만 들어감) ── */
+  .clients{display:grid;grid-template-columns:repeat(2,1fr);gap:0}
+  .clients div{height:36mm;display:flex;align-items:center;justify-content:center;
+               padding:6mm 5mm;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .clients div:nth-child(2n){border-right:0}
+  .clients img{max-width:100%;max-height:17mm;object-fit:contain;display:block}
+  .clients .word{font-size:11.5pt;font-weight:700;letter-spacing:-.04em;text-align:center;line-height:1.45}
+  .clients .word small{display:block;font-family:var(--en);font-size:6.8pt;font-weight:500;
+                       letter-spacing:.18em;color:var(--gray);margin-top:2mm}
+
+  /* ── 뒷표지 ── */
+  .back .display{font-size:46pt}
+  .back .info{margin-top:auto}
+  .back dl{display:grid;grid-template-columns:24mm 1fr;gap:3.4mm 7mm;margin:0;font-size:9.6pt}
+  .back dt{font-family:var(--en);font-size:7.2pt;letter-spacing:.2em;color:var(--yellow);
+           text-transform:uppercase;padding-top:1.2mm}
+  .back dd{margin:0;line-height:1.6;color:#E6E2DC}
+  .back .lg{display:flex;align-items:center;gap:3.5mm;margin-top:12mm}
+  .back .lg svg{width:11mm;height:11mm}
+  .back .lg b{font-size:12pt;letter-spacing:-.03em;display:block}
+  .back .lg b i{color:var(--yellow);font-style:normal}
+  .back .lg span{font-family:var(--en);font-size:6.8pt;letter-spacing:.2em;color:#9B968E;display:block}
 </style>
 </head>
 <body>
 
-<!-- ───────── 1. 표지 ───────── -->
+<!-- ══════ 01 표지 ══════ -->
 <section class="page cover">
-  <div class="top">
-    <div class="mark">
+  <div class="bleed"><img src="../../images/photos/exterior-wide.jpg" alt=""></div>
+  <div class="veil"></div>
+  <div class="mast">
+    <div class="lg">
       <svg viewBox="0 0 48 48" fill="none" stroke-linejoin="round" stroke-linecap="round">
         <path d="M24 4 43 15v19L24 45 5 34V15zM5 15l19 11 19-11M24 26v19" stroke="#fff" stroke-width="2.4"/>
         <path d="M14.5 9.5 33.5 20.5v4.5" stroke="#F2B233" stroke-width="4.2"/>
       </svg>
       <div><b>주식회사 남<i>강</i>포장</b><span>NAMGANGPACK</span></div>
     </div>
-    <h1>COMPANY<b>PROFILE</b></h1>
-    <p class="kr">골판지 카톤박스 · 인쇄 박스 제조</p>
-    <p class="sl">Protecting Products. Building Trust.<br>제품을 지키고, 신뢰를 쌓다.</p>
+    <div class="yr">SINCE 2011 · ANSEONG</div>
   </div>
-  <div class="shot"><img src="../../images/photos/exterior-wide.jpg" alt=""></div>
-  <div class="foot">
-    <div>
-      <b>경기도 안성시 원곡면 통심길 8</b><br>
-      TEL 031-611-8366 · FAX 031-611-8367 · may212@daum.net
-    </div>
-    <div style="text-align:right">www.namgangpack.com</div>
+
+  <div class="ttl">
+    <span class="kicker on-dark">Company Profile</span>
+    <h1 class="display">CARTON<b>&amp; PRINT</b></h1>
+    <p>골판지 원단을 가공해 인쇄부터 제함·출고까지<br>한 공장에서 직접 만듭니다.</p>
+  </div>
+
+  <div class="bar">
+    <div><b>Protecting Products. Building Trust.</b>제품을 지키고, 신뢰를 쌓다.</div>
+    <div class="r">www.namgangpack.com<br>T. 031-611-8366</div>
   </div>
 </section>
 
-<!-- ───────── 2. 대표 인사말 ───────── -->
-<section class="page">
-  <div class="ph">
-    <div><span class="en">GREETING</span><h2>대표 인사말</h2></div>
-    <small>주식회사 남강포장</small>
-  </div>
+<!-- ══════ 02 목차 ══════ -->
+<section class="page paper">
+  <div class="pad" style="display:flex;flex-direction:column">
+    <span class="kicker">Contents</span>
+    <h2 class="display" style="font-size:36pt">INDEX</h2>
+    <div class="rule"></div>
 
-  <div class="greet">
-    <div>
-      <p class="lead">박스는 제품이 고객에게 닿기까지<br>가장 오래 함께하는 포장입니다.</p>
-      <p>남강포장은 2011년 경기도 안성에서 시작해, 골판지 원단을 가공해 인쇄부터
-         재단·접착·제함·출고까지 한 공장에서 직접 수행해 왔습니다.
-         2026년 법인으로 전환하고 제2공장을 증설하며 생산 능력을 넓혔습니다.</p>
-      <p>포장은 눈에 잘 띄지 않지만, 제품이 상하거나 규격이 맞지 않으면
-         가장 먼저 문제가 드러나는 자리입니다. 그래서 담을 제품에 맞는 규격을
-         세심하게 살피고, 약속한 사양과 납기를 그대로 지키는 일을
-         가장 중요하게 여기고 있습니다.</p>
-      <p>앞으로도 거래처가 믿고 맡길 수 있는 포장 파트너가 되겠습니다.
-         찾아주셔서 감사합니다.</p>
-      <div class="sign">
-        <small>주식회사 남강포장 대표이사</small>
-        <img src="../../images/signature.png" alt="대표이사 구미영">
-      </div>
-    </div>
-    <figure><img src="../../images/photos/warehouse-wide.jpg" alt=""></figure>
-  </div>
+    <ul class="toc">
+      <li><span class="n">01</span><span class="t">우리의 약속</span><span class="e">Our Promise</span></li>
+      <li><span class="n">02</span><span class="t">회사 개요</span><span class="e">Overview</span></li>
+      <li><span class="n">03</span><span class="t">연혁</span><span class="e">History</span></li>
+      <li><span class="n">04</span><span class="t">사업장 · 생산 설비</span><span class="e">Facilities</span></li>
+      <li><span class="n">05</span><span class="t">박스 형태</span><span class="e">Products</span></li>
+      <li><span class="n">06</span><span class="t">인쇄 박스 · 골판지</span><span class="e">Printing</span></li>
+    </ul>
 
-  <figure class="band"><img src="../../images/photos/exterior-band.jpg" alt=""></figure>
-
-  <div class="promise">
-    <div><b>정확한 규격</b><p>담을 제품에 꼭 맞는 크기와 골판지를 제안하고, 약속한 사양 그대로 만듭니다.</p></div>
-    <div><b>약속한 납기</b><p>주문부터 제작까지 7일 이내를 기준으로, 일정에 맞춰 납품합니다.</p></div>
-    <div><b>빠른 회신</b><p>견적 문의에는 48시간 이내에 답변드립니다.</p></div>
-  </div>
-
-  <div class="pn"><span>NAMGANGPACK</span><span>02</span></div>
-</section>
-
-<!-- ───────── 3. 회사 개요 · 연혁 ───────── -->
-<section class="page">
-  <div class="ph">
-    <div><span class="en">OVERVIEW &amp; HISTORY</span><h2>회사 개요 및 연혁</h2></div>
-    <small>2026년 기준</small>
-  </div>
-
-  <table class="info">
-    <tr><th>회사명</th><td>주식회사 남강포장</td></tr>
-    <tr><th>대표이사</th><td>구미영</td></tr>
-    <tr><th>설립</th><td>2011년 7월 개업 · 2026년 1월 법인 전환</td></tr>
-    <tr><th>사업자등록번호</th><td>843-81-04019</td></tr>
-    <tr><th>업종</th><td>제조업 · 골판지 및 골판지상자 제조</td></tr>
-    <tr><th>주요 제품</th><td>카톤박스(골판지 박스), 인쇄 박스, 맞춤 규격 박스</td></tr>
-    <tr><th>주소</th><td>경기도 안성시 원곡면 통심길 8 (J, G, H, I, F동)</td></tr>
-    <tr><th>연락처</th><td>TEL 031-611-8366 · FAX 031-611-8367 · E-mail may212@daum.net</td></tr>
-    <tr><th>홈페이지</th><td>www.namgangpack.com</td></tr>
-  </table>
-
-  <div class="hist">
-    <ol>
-      <li class="key"><time>2026.05</time><b>경기지방중소벤처기업청장상 표창</b></li>
-      <li class="key"><time>2026.01</time><b>법인 전환 (주식회사 남강포장) · 제2공장 증설</b></li>
-      <li><time>2023.01</time><b>안성수출기업인협의회 회원사 등록</b></li>
-      <li><time>2021.12</time><b>경기도의회의장상 · 오산시장상 표창</b></li>
-      <li class="key"><time>2021.01</time><b>글로벌 기계부품 기업 우수협력사 지정</b></li>
-      <li><time>2020.11</time><b>오산시자원봉사자상 표창</b></li>
-      <li><time>2016.01</time><b>(사)중소기업융합경기연합회 회원사 등록</b></li>
-      <li><time>2015.07</time><b>경기도지사상 표창</b></li>
-      <li><time>2014.03</time><b>경기도 경제인연합회 회원사 등록</b></li>
-      <li class="key"><time>2012.07</time><b>고용노동부 CLEAN 사업장 인정</b></li>
-      <li class="key"><time>2011.07</time><b>회사 설립 (경기도 안성시 원곡면 통심길 8)</b></li>
-    </ol>
-  </div>
-
-  <div class="pn"><span>NAMGANGPACK</span><span>03</span></div>
-</section>
-
-<!-- ───────── 4. 사업장 현황 · 시설현황 ───────── -->
-<section class="page">
-  <div class="ph">
-    <div><span class="en">FACILITIES</span><h2>사업장 현황 및 생산 설비</h2></div>
-    <small>안성 본사 · 제1 / 제2공장</small>
-  </div>
-
-  <table class="info">
-    <tr><th>사업장</th><td>경기도 안성시 원곡면 통심길 8 (J, G, H, I, F동)</td></tr>
-    <tr><th>대지 면적</th><td>4,950㎡ (약 1,500평)</td></tr>
-    <tr><th>건축 면적</th><td>1,850㎡ (약 560평)</td></tr>
-    <tr><th>공장</th><td>제1공장 · 제2공장 (2026년 증설)</td></tr>
-    <tr><th>생산 품목</th><td>골판지 카톤박스, 인쇄 박스(최대 5도), 맞춤 규격 박스</td></tr>
-  </table>
-
-  <div class="facts">
-    <div><small>SINCE</small><b>2011</b><span>안성 한자리에서 15년</span></div>
-    <div><small>LAND</small><b>1,500평</b><span>대지 4,950㎡</span></div>
-    <div><small>FACTORY</small><b>2개 동</b><span>2026년 제2공장 증설</span></div>
-  </div>
-
-  <h3 style="font-size:12pt;margin:9mm 0 0;letter-spacing:-.02em">보유 설비</h3>
-  <table class="spec">
-    <thead><tr><th>설비명</th><th>공정</th><th>사양 · 용도</th></tr></thead>
-    <tbody>
-      <tr><td>인쇄기</td><td class="c">인쇄</td><td>최대 5도 인쇄 · 로고, 제품명, 취급 주의 표시 인쇄</td></tr>
-      <tr><td>톰슨기 (다이커터)</td><td class="c">재단</td><td>목형 재단 · 날개와 접는 선 가공, 조립형·손잡이형 등 형태 가공</td></tr>
-      <tr><td>접착기 (제함기)</td><td class="c">접착 · 제함</td><td>이음면 접착 후 박스 형태로 완성</td></tr>
-      <tr><td>지게차 · 화물차</td><td class="c">출고</td><td>팔레트 적재 및 전국 납품</td></tr>
-    </tbody>
-  </table>
-
-  <p class="note">
-    · 원단 가공부터 인쇄 · 재단 · 접착 · 제함 · 출고까지 <b>한 공장에서 직접</b> 수행합니다.<br>
-    · 대량 생산과 소량 다품종 주문을 함께 소화할 수 있도록 <b>제1공장과 제2공장을 나누어</b> 운영합니다.<br>
-    · 골판지 원단은 직접 생산하지 않고, 검증된 원단을 매입해 가공합니다.
-  </p>
-
-  <div class="pn"><span>NAMGANGPACK</span><span>04</span></div>
-</section>
-
-<!-- ───────── 5. 생산 공정 ───────── -->
-<section class="page">
-  <div class="ph">
-    <div><span class="en">PROCESS</span><h2>생산 공정</h2></div>
-    <small>원단부터 출고까지 5단계</small>
-  </div>
-
-  <div class="steps">
-    <div class="step">
-      <img src="../../images/photos/proc-01-sheet.jpg" alt="">
-      <div><span class="no">01 BOARD</span><h3>원단</h3>
-        <p>담을 제품의 무게와 용도에 맞는 골판지 원단을 골라, 필요한 크기로 준비합니다.</p></div>
-    </div>
-    <div class="step">
-      <img src="../../images/photos/equip-press.jpg" alt="">
-      <div><span class="no">02 PRINTING</span><h3>인쇄</h3>
-        <p>로고와 제품명, 취급 주의 표시를 선명하게 인쇄합니다. 최대 5도까지 인쇄할 수 있으며,
-           무인쇄 박스는 이 단계를 건너뜁니다.</p></div>
-    </div>
-    <div class="step">
-      <img src="../../images/photos/equip-die.jpg" alt="">
-      <div><span class="no">03 DIE-CUTTING</span><h3>재단</h3>
-        <p>톰슨(목형) 재단으로 날개와 접는 선을 정확하게 만들어, 조립이 쉽고 모양이 반듯한 박스를 만듭니다.</p></div>
-    </div>
-    <div class="step">
-      <img src="../../images/photos/equip-glue.jpg" alt="">
-      <div><span class="no">04 GLUING</span><h3>접착 · 제함</h3>
-        <p>이음면을 튼튼하게 접착해 박스 형태로 완성하고, 규격과 접착 상태를 확인합니다.</p></div>
-    </div>
-    <div class="step">
-      <img src="../../images/photos/equip-forklift.jpg" alt="">
-      <div><span class="no">05 DELIVERY</span><h3>출고</h3>
-        <p>수량을 확인해 팔레트에 적재하고, 약속한 날짜에 맞춰 전국으로 납품합니다.</p></div>
-    </div>
-  </div>
-
-  <p class="note">
-    <b>세 번의 확인</b> — 처음 만드는 박스는 필요하면 샘플로 크기와 강도를 먼저 확인하고,
-    생산 중에는 규격과 인쇄 상태를, 출고 전에는 수량과 포장 상태를 다시 확인합니다.
-  </p>
-
-  <div class="pn"><span>NAMGANGPACK</span><span>05</span></div>
-</section>
-
-<!-- ───────── 6. 제품 ───────── -->
-<section class="page">
-  <div class="ph">
-    <div><span class="en">PRODUCTS</span><h2>박스 형태</h2></div>
-    <small>담을 제품과 쓰임새에 맞춰 제작</small>
-  </div>
-
-  <div class="prods">
-    <div class="prod"><img src="../../images/photos/product-carton.jpg" alt="">
-      <h3>일반형 (A형)</h3><p>위·아래 날개를 접고 테이프로 봉하는 기본 형태. 택배 · 제품 운송 · 보관</p></div>
-    <div class="prod"><img src="../../images/photos/product-kraft.jpg" alt="">
-      <h3>조립형</h3><p>테이프 없이 접어서 조립하는 형태. 소량 포장 · 선물 · 전시</p></div>
-    <div class="prod"><img src="../../images/photos/product-lid.jpg" alt="">
-      <h3>뚜껑 일체형</h3><p>뚜껑이 몸통에 붙어 있어 여닫기 편한 형태. 택배 · 반품이 잦은 제품</p></div>
-    <div class="prod"><img src="../../images/photos/product-handle.jpg" alt="">
-      <h3>손잡이형</h3><p>손잡이를 마련해 들고 이동하기 편한 형태. 선물용 · 세트 상품</p></div>
-    <div class="prod"><img src="../../images/photos/product-long.jpg" alt="">
-      <h3>장형</h3><p>길쭉한 제품을 담는 긴 형태. 포스터 · 우산 · 긴 부품</p></div>
-    <div class="prod"><img src="../../images/photos/product-wrap.jpg" alt="">
-      <h3>싸개형</h3><p>제품을 감싸듯 접어 포장하는 형태. 책 · 인쇄물 · 얇은 제품</p></div>
-  </div>
-
-  <h3 style="font-size:12pt;margin:8mm 0 0;letter-spacing:-.02em">골판지 종류</h3>
-  <table class="flute">
-    <thead><tr><th>골 종류</th><th>두께(약)</th><th>특징</th><th>주로 쓰는 곳</th></tr></thead>
-    <tbody>
-      <tr><td>E골</td><td>1.5mm</td><td>얇고 표면이 매끈해 인쇄가 깔끔합니다</td><td>소형 제품, 화장품·식품 단상자</td></tr>
-      <tr><td>B골</td><td>3mm</td><td>가장 많이 쓰는 두께. 강도와 가격의 균형이 좋습니다</td><td>일반 택배·유통 박스</td></tr>
-      <tr><td>A골</td><td>5mm</td><td>골이 높아 쿠션감이 좋고 충격을 잘 흡수합니다</td><td>파손 우려가 있는 제품</td></tr>
-      <tr><td>이중골</td><td>6–8mm</td><td>골판지를 두 겹으로 붙여 강도가 높습니다</td><td>중량물, 장거리 물류</td></tr>
-    </tbody>
-  </table>
-  <p class="note">· 두께는 일반적인 기준이며 원지에 따라 달라질 수 있습니다. 담을 제품의 무게를 알려주시면 알맞은 골을 제안드립니다.</p>
-
-  <div class="pn"><span>NAMGANGPACK</span><span>06</span></div>
-</section>
-
-<!-- ───────── 7. 납품 분야 ───────── -->
-<section class="page">
-  <div class="ph">
-    <div><span class="en">APPLICATIONS</span><h2>납품 분야</h2></div>
-    <small>다양한 업종에 납품하고 있습니다</small>
-  </div>
-
-  <div class="fields">
-    <div><img src="../../images/photos/work-delivery.jpg" alt="">
-      <div><b>유통 · 물류</b><span>유통센터 출고용 박스, 택배 박스</span></div></div>
-    <div><img src="../../images/photos/work-export.jpg" alt="">
-      <div><b>수출 포장</b><span>해외 운송용 수출 카톤박스</span></div></div>
-    <div><img src="../../images/photos/work-food.jpg" alt="">
-      <div><b>식품</b><span>식품 포장용 인쇄 박스</span></div></div>
-    <div><img src="../../images/photos/work-marine.jpg" alt="">
-      <div><b>전자 · 계측기</b><span>제품 포장용 인쇄 박스</span></div></div>
-  </div>
-
-  <h3 style="font-size:12pt;margin:9mm 0 0;letter-spacing:-.02em">인쇄 박스</h3>
-  <div class="step" style="margin-top:3mm;grid-template-columns:62mm 1fr">
-    <img src="../../images/photos/product-printed.jpg" alt="" style="height:38mm">
-    <div>
-      <p style="font-size:9pt;line-height:1.85;color:var(--ink2);margin:0">
-        로고와 제품명, 취급 주의 표시를 박스에 바로 인쇄해 브랜드를 알릴 수 있습니다.
-        1도부터 최대 5도까지 인쇄할 수 있으며, 도안 파일을 주시면 인쇄 위치와 크기를 맞춰 드립니다.
-        도안이 없어도 규격과 문구만 알려주시면 배치를 제안해 드립니다.
+    <div style="margin-top:auto">
+      <div class="rule"></div>
+      <p class="body" style="margin:0;max-width:112mm">
+        남강포장은 2011년 경기도 안성에서 시작한 골판지 상자 제조 기업입니다.
+        택배·유통 박스부터 수출용 카톤박스, 최대 5도 인쇄 박스까지
+        담을 제품에 맞는 규격으로 제작합니다.
       </p>
     </div>
   </div>
-
-  <h3 style="font-size:12pt;margin:9mm 0 0;letter-spacing:-.02em">거래 안내</h3>
-  <table class="info" style="margin-top:3mm">
-    <tr><th>최소 수량</th><td>100개부터 제작 가능합니다</td></tr>
-    <tr><th>제작 기간</th><td>주문 확정 후 7일 이내를 기준으로 합니다 (수량·사양에 따라 달라질 수 있습니다)</td></tr>
-    <tr><th>납품 지역</th><td>전국 납품 가능합니다</td></tr>
-    <tr><th>견적 회신</th><td>문의 후 48시간 이내에 회신드립니다</td></tr>
-    <tr><th>샘플</th><td>처음 제작하는 규격은 샘플로 크기와 강도를 먼저 확인하실 수 있습니다</td></tr>
-  </table>
-
-  <div class="pn"><span>NAMGANGPACK</span><span>07</span></div>
+  <span class="folio">02</span>
+  <span class="runner">Namgangpack</span>
 </section>
 
-<!-- ───────── 8. 뒷표지 ───────── -->
-<section class="page back">
-  <h2>Need a<b>Box?</b></h2>
-  <p class="kr">규격과 수량만 알려주시면 빠르게 견적을 드립니다.<br>
-     도면이 없어도 담을 제품의 크기와 무게만으로 상담이 가능합니다.</p>
+<!-- ══════ 03 슬로건 · 약속 ══════ -->
+<section class="page">
+  <div class="bleed" style="bottom:auto;height:130mm">
+    <img src="../../images/photos/warehouse-wide.jpg" alt="" style="object-position:50% 58%">
+  </div>
+  <div class="pad" style="top:130mm;display:flex;flex-direction:column">
+    <span class="kicker">01 — Our Promise</span>
+    <p class="quote" style="margin:5mm 0 0;font-size:20pt">
+      제품을 지키고,<br><em>신뢰를 쌓습니다.</em>
+    </p>
+    <p style="margin:4mm 0 0;font-family:var(--en);font-size:9pt;letter-spacing:.14em;color:var(--gray)">
+      PROTECTING PRODUCTS. BUILDING TRUST.</p>
+    <div class="rule"></div>
+    <div class="promise">
+      <div><span class="pn">01</span><h4>정확한 규격</h4>
+        <p>담을 제품에 꼭 맞는 크기와 골판지를 제안하고, 약속한 사양 그대로 만듭니다.</p></div>
+      <div><span class="pn">02</span><h4>약속한 납기</h4>
+        <p>주문 확정 후 7일 이내를 기준으로, 일정에 맞춰 납품합니다.</p></div>
+      <div><span class="pn">03</span><h4>빠른 회신</h4>
+        <p>견적 문의에는 48시간 이내에 답변드립니다.</p></div>
+    </div>
+  </div>
+  <span class="folio" style="color:#CFCAC2">03</span>
+  <span class="runner">Our Promise</span>
+</section>
 
-  <dl class="row">
-    <dt>주소</dt><dd>경기도 안성시 원곡면 통심길 8 (J, G, H, I, F동)</dd>
-    <dt>전화</dt><dd>031-611-8366</dd>
-    <dt>팩스</dt><dd>031-611-8367</dd>
-    <dt>이메일</dt><dd>may212@daum.net</dd>
-    <dt>홈페이지</dt><dd>www.namgangpack.com</dd>
-    <dt>운영 시간</dt><dd>평일 09:00 – 18:00 (주말·공휴일 휴무)</dd>
-  </dl>
+<!-- ══════ 04 회사 개요 ══════ -->
+<section class="page paper">
+  <div class="pad" style="display:flex;flex-direction:column">
+    <span class="kicker">02 — Overview</span>
+    <h2 class="title-ko">회사 개요</h2>
+    <div class="rule"></div>
 
-  <figure class="band" style="margin-top:12mm;height:62mm;border-top:1.2mm solid var(--yellow)">
-    <img src="../../images/photos/stock-pallets.jpg" alt="">
-  </figure>
+    <dl class="facts">
+      <div><dt>Company</dt><dd>주식회사 남강포장</dd></div>
+      <div><dt>CEO</dt><dd>구미영</dd></div>
+      <div><dt>Established</dt><dd>2011년 7월 개업 · 2026년 1월 법인 전환</dd></div>
+      <div><dt>Business No.</dt><dd>843-81-04019</dd></div>
+      <div><dt>Industry</dt><dd>제조업 · 골판지 및 골판지상자 제조</dd></div>
+      <div><dt>Products</dt><dd>카톤박스 · 인쇄 박스 · 맞춤 규격 박스</dd></div>
+      <div><dt>Address</dt><dd>경기도 안성시 원곡면 통심길 8<br>(J, G, H, I, F동)</dd></div>
+      <div><dt>Contact</dt><dd>T. 031-611-8366 · F. 031-611-8367<br>may212@daum.net</dd></div>
+    </dl>
 
-  <div class="mark2">
-    <svg viewBox="0 0 48 48" fill="none" stroke-linejoin="round" stroke-linecap="round">
-      <path d="M24 4 43 15v19L24 45 5 34V15zM5 15l19 11 19-11M24 26v19" stroke="#fff" stroke-width="2.4"/>
-      <path d="M14.5 9.5 33.5 20.5v4.5" stroke="#F2B233" stroke-width="4.2"/>
-    </svg>
-    <div><b>주식회사 남<i>강</i>포장</b><span>NAMGANGPACK</span></div>
+    <div class="bignum">
+      <div><span class="k">Since</span><b>2011</b><span>안성 한자리에서 15년째<br>박스를 만들고 있습니다</span></div>
+      <div><span class="k">Land</span><b>4,950<i>㎡</i></b><span>대지 약 1,500평<br>건평 1,850㎡ (약 560평)</span></div>
+      <div><span class="k">Factory</span><b>2<i>개 동</i></b><span>2026년 제2공장 증설로<br>생산 능력을 넓혔습니다</span></div>
+    </div>
+
+    <div style="margin-top:auto">
+      <div class="rule"></div>
+      <div class="body" style="max-width:130mm">
+        <p style="margin:0">골판지 원단은 직접 생산하지 않고, 검증된 원단을 매입해 가공합니다.
+        인쇄 · 재단 · 접착 · 제함 · 출고는 모두 자사 공장에서 직접 수행합니다.</p>
+      </div>
+    </div>
+  </div>
+  <span class="folio">04</span>
+  <span class="runner">Overview</span>
+</section>
+
+<!-- ══════ 05 연혁 ══════ -->
+<section class="page">
+  <div class="pad" style="display:flex;flex-direction:column">
+    <span class="kicker">03 — History</span>
+    <h2 class="title-ko">남강포장이 걸어온 길</h2>
+    <div class="rule"></div>
+
+    <ul class="hist">
+      <li class="key"><time>2026.05</time><span>경기지방중소벤처기업청장상 표창</span></li>
+      <li class="key"><time>2026.01</time><span>법인 전환 (주식회사 남강포장) · 제2공장 증설</span></li>
+      <li><time>2023.01</time><span>안성수출기업인협의회 회원사 등록</span></li>
+      <li><time>2021.12</time><span>경기도의회의장상 표창 · 오산시장상 표창</span></li>
+      <li class="key"><time>2021.01</time><span>글로벌 기계부품 기업 우수협력사 지정</span></li>
+      <li><time>2020.11</time><span>오산시자원봉사자상 표창</span></li>
+      <li><time>2016.01</time><span>(사)중소기업융합경기연합회 회원사 등록</span></li>
+      <li><time>2015.07</time><span>경기도지사상 표창</span></li>
+      <li><time>2014.03</time><span>경기도 경제인연합회 회원사 등록</span></li>
+      <li class="key"><time>2012.07</time><span>고용노동부 CLEAN 사업장 인정</span></li>
+      <li class="key"><time>2011.07</time><span>회사 설립 (경기도 안성시 원곡면 통심길 8)</span></li>
+    </ul>
+
+    <figure style="margin:auto 0 0;height:64mm;overflow:hidden">
+      <img src="../../images/photos/exterior-band.jpg" alt=""
+           style="width:100%;height:100%;object-fit:cover;object-position:50% 58%;display:block">
+    </figure>
+  </div>
+  <span class="folio" style="color:#CFCAC2">05</span>
+  <span class="runner">History</span>
+</section>
+
+<!-- ══════ 06 사업장 · 설비 ══════ -->
+<section class="page paper">
+  <div class="pad" style="display:flex;flex-direction:column">
+    <span class="kicker">04 — Facilities</span>
+    <h2 class="title-ko">사업장 · 생산 설비</h2>
+    <div class="rule"></div>
+
+    <figure style="margin:0 0 8mm;height:56mm;overflow:hidden">
+      <img src="../../images/photos/visual-press.jpg" alt=""
+           style="width:100%;height:100%;object-fit:cover;display:block">
+    </figure>
+
+    <ul class="eq">
+      <li>
+        <h4>인쇄기<small>Printing</small></h4>
+        <p>최대 5도까지 인쇄합니다. 로고와 제품명, 취급 주의 표시를 박스에 바로 인쇄해
+           별도 라벨 없이 브랜드를 드러낼 수 있습니다.</p>
+      </li>
+      <li>
+        <h4>톰슨기<small>Die-cutting</small></h4>
+        <p>목형 재단으로 날개와 접는 선을 정확하게 가공합니다.
+           조립형·손잡이형·싸개형처럼 형태가 있는 박스를 만드는 공정입니다.</p>
+      </li>
+      <li>
+        <h4>접착기<small>Gluing</small></h4>
+        <p>이음면을 튼튼하게 접착해 박스 형태로 완성합니다.
+           접착 상태와 규격을 확인한 뒤 다음 공정으로 넘깁니다.</p>
+      </li>
+      <li>
+        <h4>지게차 · 화물차<small>Delivery</small></h4>
+        <p>팔레트에 적재해 전국으로 납품합니다. 출고 전 수량과 포장 상태를 다시 확인합니다.</p>
+      </li>
+    </ul>
+
+    <p class="body" style="margin:auto 0 0;font-size:9pt">
+      대량 생산과 소량 다품종 주문을 함께 소화할 수 있도록 제1공장과 제2공장을 나누어 운영합니다.
+    </p>
+  </div>
+  <span class="folio">06</span>
+  <span class="runner">Facilities</span>
+</section>
+
+<!-- ══════ 07 제품 룩북 ══════ -->
+<section class="page paper">
+  <div class="pad" style="display:flex;flex-direction:column">
+    <span class="kicker">05 — Products</span>
+    <h2 class="title-ko">박스 형태</h2>
+    <div class="rule"></div>
+
+    <div class="look-grid">
+      <figure>
+        <img src="../../images/photos/product-carton.jpg" alt="">
+        <span class="e">A-Type</span><h4>일반형 (A형)</h4>
+        <p>위·아래 날개를 접고 테이프로 봉하는 기본 형태</p>
+      </figure>
+      <figure>
+        <img src="../../images/photos/product-kraft.jpg" alt="">
+        <span class="e">Assembly</span><h4>조립형</h4>
+        <p>테이프 없이 접어서 조립하는 형태</p>
+      </figure>
+      <figure>
+        <img src="../../images/photos/product-lid.jpg" alt="">
+        <span class="e">One-piece Lid</span><h4>뚜껑 일체형</h4>
+        <p>뚜껑이 몸통에 붙어 있어 여닫기 편한 형태</p>
+      </figure>
+      <figure>
+        <img src="../../images/photos/product-handle.jpg" alt="">
+        <span class="e">Handle</span><h4>손잡이형</h4>
+        <p>손잡이를 마련해 들고 이동하기 편한 형태</p>
+      </figure>
+      <figure>
+        <img src="../../images/photos/product-long.jpg" alt="">
+        <span class="e">Long</span><h4>장형</h4>
+        <p>길쭉한 제품을 담는 긴 형태</p>
+      </figure>
+      <figure>
+        <img src="../../images/photos/product-wrap.jpg" alt="">
+        <span class="e">Wrap</span><h4>싸개형</h4>
+        <p>제품을 감싸듯 접어 포장하는 형태</p>
+      </figure>
+    </div>
+
+    <p style="margin:auto 0 0;font-size:8.6pt;color:var(--gray);line-height:1.85">
+      규격은 mm 단위로 맞춥니다. 도면이 없어도 담을 제품의 크기와 무게만 알려주시면
+      알맞은 형태와 골판지를 제안해 드립니다.</p>
+  </div>
+  <span class="folio">07</span>
+  <span class="runner">Products</span>
+</section>
+
+<!-- ══════ 08 인쇄 박스 · 골판지 ══════ -->
+<section class="page">
+  <div class="bleed" style="bottom:auto;height:118mm">
+    <img src="../../images/photos/product-printed.jpg" alt="" style="object-position:50% 50%">
+  </div>
+  <div class="pad" style="top:118mm;display:flex;flex-direction:column">
+    <span class="kicker">06 — Printing &amp; Board</span>
+    <h3 style="margin:4mm 0 0;font-size:19pt;letter-spacing:-.04em">박스가 곧 브랜드가 됩니다</h3>
+    <p style="margin:4mm 0 0;font-size:9.4pt;line-height:1.95;color:var(--ink2);max-width:150mm">
+      로고와 제품명, 취급 주의 표시를 박스에 바로 인쇄해 별도 라벨 없이 브랜드를 알릴 수 있습니다.
+      1도부터 최대 5도까지 인쇄할 수 있으며, 도안이 없어도 규격과 문구만 알려주시면 배치를 제안해 드립니다.</p>
+
+    <div class="rule"></div>
+    <ul class="flute">
+      <li><b>E골</b><em>1.5mm</em><p>얇고 표면이 매끈해 인쇄가 깔끔합니다 · 화장품·식품 단상자</p></li>
+      <li><b>B골</b><em>3mm</em><p>가장 많이 쓰는 두께, 강도와 가격의 균형 · 일반 택배·유통 박스</p></li>
+      <li><b>A골</b><em>5mm</em><p>골이 높아 충격을 잘 흡수합니다 · 파손 우려가 있는 제품</p></li>
+      <li><b>이중골</b><em>6–8mm</em><p>두 겹으로 붙여 강도가 높습니다 · 중량물, 장거리 물류</p></li>
+    </ul>
+    <p style="margin:5mm 0 0;font-size:8.2pt;color:var(--gray);line-height:1.8">
+      두께는 일반적인 기준이며 원지에 따라 달라질 수 있습니다.</p>
+  </div>
+  <span class="folio" style="color:#CFCAC2">08</span>
+  <span class="runner">Printing</span>
+</section>
+
+<!-- ══════ 09 뒷표지 ══════ -->
+<section class="page">
+  <div class="bleed"><img src="../../images/photos/stock-pallets.jpg" alt=""></div>
+  <div class="veil" style="background:rgba(18,18,18,.78)"></div>
+  <div class="pad back" style="display:flex;flex-direction:column;color:#fff">
+    <span class="kicker on-dark">Contact</span>
+    <h2 class="display">NEED A<b>BOX?</b></h2>
+    <p style="margin:7mm 0 0;font-size:11pt;color:#DEDAD3;line-height:1.85;letter-spacing:-.02em">
+      규격과 수량만 알려주시면 빠르게 견적을 드립니다.<br>
+      도면이 없어도 담을 제품의 크기와 무게만으로 상담이 가능합니다.</p>
+
+    <div class="info">
+      <div class="rule dark"></div>
+      <dl>
+        <dt>Address</dt><dd>경기도 안성시 원곡면 통심길 8 (J, G, H, I, F동)</dd>
+        <dt>Tel</dt><dd>031-611-8366</dd>
+        <dt>Fax</dt><dd>031-611-8367</dd>
+        <dt>E-mail</dt><dd>may212@daum.net</dd>
+        <dt>Web</dt><dd>www.namgangpack.com</dd>
+        <dt>Hours</dt><dd>평일 09:00 – 18:00 (주말·공휴일 휴무)</dd>
+      </dl>
+      <div class="lg">
+        <svg viewBox="0 0 48 48" fill="none" stroke-linejoin="round" stroke-linecap="round">
+          <path d="M24 4 43 15v19L24 45 5 34V15zM5 15l19 11 19-11M24 26v19" stroke="#fff" stroke-width="2.4"/>
+          <path d="M14.5 9.5 33.5 20.5v4.5" stroke="#F2B233" stroke-width="4.2"/>
+        </svg>
+        <div><b>주식회사 남<i>강</i>포장</b><span>NAMGANGPACK</span></div>
+      </div>
+    </div>
   </div>
 </section>
 
