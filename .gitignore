@@ -11,7 +11,5 @@ CI_남강포장/
 남강포장_CI.zip
 
 # 납품처 로고·직접 전달용 소개서 (홈페이지에 공개하지 않음)
-docs/회사소개서/logos/
-docs/회사소개서/납품처-page.html
-docs/회사소개서/brochure-direct.html
-files/namgang-company-직접전달용.pdf
+docs/회사소개서/
+files/namgang-company*.pdf
