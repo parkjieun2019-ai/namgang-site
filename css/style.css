@@ -1177,3 +1177,13 @@ h1, h2, h3, h4 { line-height: 1.35; letter-spacing: -0.02em; }
   color: #fff; font-size: 14.5px; font-weight: 500; letter-spacing: -0.01em;
 }
 @media (max-width: 640px) { .pano-figure figcaption { font-size: 13px; padding-bottom: 14px; } }
+
+/* 가로로 긴 사진: 좁은 화면에서 잘려도 간판(오른쪽)이 보이게 */
+.sub-visual-bg.is-right img, .pano-figure.is-right img { object-position: 66% center; }
+@media (max-width: 900px) {
+  .sub-visual-bg.is-right img, .pano-figure.is-right img { object-position: 74% center; }
+  .pano-figure img { height: clamp(220px, 46vw, 320px); }
+}
+@media (max-width: 560px) {
+  .sub-visual-bg.is-right img, .pano-figure.is-right img { object-position: 78% center; }
+}
