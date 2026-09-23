@@ -1145,3 +1145,23 @@ h1, h2, h3, h4 { line-height: 1.35; letter-spacing: -0.02em; }
 .choice-card .box { grid-template-rows: auto auto; align-content: center; row-gap: 5px; }
 .choice-card strong { align-self: end; }
 .choice-card .desc { align-self: start; }
+
+/* 메인 신뢰 띠 (인증·수상) */
+.trust { border-bottom: 1px solid var(--line); background: #fff; }
+.trust .container { display: flex; align-items: center; gap: clamp(20px, 4vw, 48px); flex-wrap: wrap; padding-block: 22px; }
+.trust-lead { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.trust-lead b { font-family: var(--font-en); font-size: 20px; font-weight: 700; letter-spacing: -0.01em; color: var(--ink); }
+.trust-lead span { font-size: 14.5px; color: var(--muted); }
+.trust-list { display: flex; flex-wrap: wrap; gap: 8px 26px; flex: 1; }
+.trust-list li { position: relative; padding-left: 20px; font-size: 14.5px; font-weight: 600; color: var(--ink); }
+.trust-list li::before {
+  content: ''; position: absolute; left: 0; top: .42em;
+  width: 11px; height: 6px; border-left: 2px solid var(--accent-dark); border-bottom: 2px solid var(--accent-dark);
+  transform: rotate(-45deg);
+}
+@media (max-width: 860px) {
+  .trust .container { gap: 14px; padding-block: 18px; }
+  .trust-lead b { font-size: 18px; }
+  .trust-list { gap: 6px 18px; }
+  .trust-list li { font-size: 13.5px; padding-left: 18px; }
+}
