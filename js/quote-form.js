@@ -125,12 +125,26 @@
       nextBtn.hidden = last;
       submitBtn.hidden = !last;
       if (last) renderSummary();
+      renderChosen();
 
       if (moveFocus) {
         var top = stepper.getBoundingClientRect().top + window.scrollY - 100;
         if (window.scrollY > top) window.scrollTo({ top: top });
         panels[current].querySelector('h2').focus({ preventScroll: true });
       }
+    }
+
+    /* ---------- 1단계에서 고른 박스 종류를 2·3단계에서도 보여줌 ---------- */
+    var chosenBox = document.querySelector('[data-chosen]');
+    function renderChosen() {
+      if (!chosenBox) return;
+      var label = LABELS.boxType[f.boxType.value];
+      var show = current > 0 && !!label;
+      chosenBox.hidden = !show;
+      if (show) chosenBox.querySelector('[data-chosen-text]').textContent = label;
+    }
+    if (chosenBox) {
+      chosenBox.querySelector('[data-chosen-edit]').addEventListener('click', function () { goTo(0, true); });
     }
 
     nextBtn.addEventListener('click', function () {
