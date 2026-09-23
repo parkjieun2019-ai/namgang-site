@@ -1187,3 +1187,9 @@ h1, h2, h3, h4 { line-height: 1.35; letter-spacing: -0.02em; }
 @media (max-width: 560px) {
   .sub-visual-bg.is-right img, .pano-figure.is-right img { object-position: 78% center; }
 }
+/* picture 안의 사진도 같은 규칙으로 */
+.sub-visual-bg picture, .pano-figure picture { display: block; width: 100%; height: 100%; }
+@media (max-width: 640px) {
+  .sub-visual-bg.is-right img, .pano-figure.is-right img { object-position: center center; }
+  .pano-figure img { height: clamp(260px, 62vw, 340px); }
+}
