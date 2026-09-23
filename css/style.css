@@ -1146,25 +1146,6 @@ h1, h2, h3, h4 { line-height: 1.35; letter-spacing: -0.02em; }
 .choice-card strong { align-self: end; }
 .choice-card .desc { align-self: start; }
 
-/* 메인 신뢰 띠 (인증·수상) */
-.trust { border-bottom: 1px solid var(--line); background: #fff; }
-.trust .container { display: flex; align-items: center; gap: clamp(20px, 4vw, 48px); flex-wrap: wrap; padding-block: 22px; }
-.trust-lead { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
-.trust-lead b { font-family: var(--font-en); font-size: 20px; font-weight: 700; letter-spacing: -0.01em; color: var(--ink); }
-.trust-lead span { font-size: 14.5px; color: var(--muted); }
-.trust-list { display: flex; flex-wrap: wrap; gap: 8px 26px; flex: 1; }
-.trust-list li { position: relative; padding-left: 20px; font-size: 14.5px; font-weight: 600; color: var(--ink); }
-.trust-list li::before {
-  content: ''; position: absolute; left: 0; top: .42em;
-  width: 11px; height: 6px; border-left: 2px solid var(--accent-dark); border-bottom: 2px solid var(--accent-dark);
-  transform: rotate(-45deg);
-}
-@media (max-width: 860px) {
-  .trust .container { gap: 14px; padding-block: 18px; }
-  .trust-lead b { font-size: 18px; }
-  .trust-list { gap: 6px 18px; }
-  .trust-list li { font-size: 13.5px; padding-left: 18px; }
-}
 
 /* 공장 전경 띠 */
 .pano { padding: 0; }
@@ -1192,4 +1173,33 @@ h1, h2, h3, h4 { line-height: 1.35; letter-spacing: -0.02em; }
 @media (max-width: 640px) {
   .sub-visual-bg.is-right img, .pano-figure.is-right img { object-position: center center; }
   .pano-figure img { height: clamp(260px, 62vw, 340px); }
+}
+
+/* 메인: 회사 주요 이력 카드 */
+.trust { background: var(--gray-bg); padding: clamp(40px, 5vw, 64px) 0; }
+.trust-cards { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+.trust-cards li {
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 24px 22px; background: #fff; border: 1px solid var(--line);
+  box-shadow: 0 1px 2px rgba(31,31,31,.04);
+}
+.tc-key {
+  font-family: var(--font-en); font-size: 13px; font-weight: 700; letter-spacing: .06em;
+  color: var(--accent-dark); text-transform: uppercase;
+}
+.trust-cards strong { font-size: 16px; line-height: 1.45; color: var(--ink); letter-spacing: -0.02em; }
+.tc-sub { margin-top: auto; padding-top: 6px; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.trust-more {
+  display: inline-flex; align-items: center; gap: 8px; margin-top: 20px;
+  font-size: 15px; font-weight: 600; color: var(--ink);
+  border-bottom: 1px solid var(--ink); padding-bottom: 3px;
+}
+.trust-more:hover { color: var(--accent-dark); border-color: var(--accent-dark); }
+@media (max-width: 1080px) { .trust-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 720px) {
+  .trust-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .trust-cards li { padding: 18px 16px; }
+  .trust-cards strong { font-size: 14.5px; }
+  .tc-key { font-size: 12px; }
+  .tc-sub { font-size: 12px; }
 }
