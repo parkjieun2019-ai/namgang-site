@@ -1177,7 +1177,7 @@ h1, h2, h3, h4 { line-height: 1.35; letter-spacing: -0.02em; }
 
 /* 메인: 회사 주요 이력 카드 */
 .trust { background: var(--gray-bg); padding: clamp(40px, 5vw, 64px) 0; }
-.trust-cards { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+.trust-cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
 .trust-cards li {
   display: flex; flex-direction: column; gap: 6px;
   padding: 24px 22px; background: #fff; border: 1px solid var(--line);
@@ -1195,7 +1195,7 @@ h1, h2, h3, h4 { line-height: 1.35; letter-spacing: -0.02em; }
   border-bottom: 1px solid var(--ink); padding-bottom: 3px;
 }
 .trust-more:hover { color: var(--accent-dark); border-color: var(--accent-dark); }
-@media (max-width: 1080px) { .trust-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 1080px) { .trust-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 720px) {
   .trust-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
   .trust-cards li { padding: 18px 16px; }
