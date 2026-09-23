@@ -1141,3 +1141,7 @@ h1, h2, h3, h4 { line-height: 1.35; letter-spacing: -0.02em; }
   .choice-card .box { grid-template-columns: 74px minmax(0, 1fr); column-gap: 14px; padding: 14px 44px 14px 14px; }
   .choice-thumb { width: 74px; height: 74px; }
 }
+/* 사진 옆 글자는 가운데로 모아서 읽히게 */
+.choice-card .box { grid-template-rows: auto auto; align-content: center; row-gap: 5px; }
+.choice-card strong { align-self: end; }
+.choice-card .desc { align-self: start; }
